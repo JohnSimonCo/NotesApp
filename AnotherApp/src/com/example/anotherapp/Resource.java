@@ -66,7 +66,7 @@ public class Resource {
 
 	public static int addNote(int listIndex, String note) {
 		NoteList list = lists.get(listIndex);
-		list.hasChanged = true;
+		list.changed = true;
 		list.notes.add(note);
 
 		return list.notes.size() - 1;
@@ -74,13 +74,13 @@ public class Resource {
 
 	public static void editNoteText(int listIndex, int noteIndex, String newValue) {
 		NoteList list = lists.get(listIndex);
-		list.hasChanged = true;
+		list.changed = true;
 		list.notes.set(noteIndex, newValue);
 	}
 	
 	public static int moveNote(int oldListIndex, int oldNoteIndex, int newListIndex) {
-		lists.get(oldListIndex).hasChanged = true;
-		lists.get(newListIndex).hasChanged = true;
+		lists.get(oldListIndex).changed = true;
+		lists.get(newListIndex).changed = true;
 		
 		String note = lists.get(oldListIndex).notes.get(oldNoteIndex);
 		lists.get(oldListIndex).notes.remove(oldNoteIndex);
@@ -91,7 +91,7 @@ public class Resource {
 	
 	public static void deleteNote(int listIndex, int noteIndex) {
 		NoteList list = lists.get(listIndex);
-		list.hasChanged = true;
+		list.changed = true;
 		list.notes.remove(noteIndex);
 	}
 	
@@ -99,7 +99,7 @@ public class Resource {
 		int i = -1;
 		while(++i < listIndexes.length) {
 			int listIndex = listIndexes[i];
-			lists.get(listIndex).hasChanged = true;
+			lists.get(listIndex).changed = true;
 			for(int c = 0; c < noteIndexes[i].length; c++) {
 				lists.get(listIndex).notes.remove(noteIndexes[i][c]);
 			}
@@ -178,7 +178,7 @@ public class Resource {
 
 	public static void applyNoteChanges() {
 		for (NoteList list : lists) {
-			if (list.hasChanged) {
+			if (list.changed) {
 				SharedPreferences.Editor editor = saves.edit();
 				int oldNoteAmount = saves.getInt(SAVE_LIST + list.id
 						+ SAVE_NOTE_AMOUNT, 0);
