@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_add_list"
+        android:icon="@drawable/list"
+        android:showAsAction="ifRoom"
+        android:title="@string/add_list"/>
+    <item
+        android:id="@+id/menu_remove_list"
+        android:icon="@drawable/delete"
+        android:showAsAction="ifRoom"
+        android:title="@string/remove_list"/>
+    <item
+        android:id="@+id/menu_new_note"
+        android:icon="@drawable/new_note"
+        android:showAsAction="ifRoom"
+        android:title="@string/new_note"/>
+    <item
+        android:id="@+id/menu_done"
+        android:icon="@drawable/done"
+        android:showAsAction="always"
+        android:title="@string/done"
+        android:visible="false"/>
+    <item
+        android:id="@+id/menu_discard"
+        android:icon="@drawable/discard"
+        android:showAsAction="always"
+        android:title="@string/discard"
+        android:visible="false"/>
+    <item
+        android:id="@+id/menu_name_list"
+        android:icon="@drawable/list"
+        android:showAsAction="collapseActionView"
+        android:title="Rename list"/>
+
+</menu>
