@@ -14,12 +14,14 @@ public class Resource {
 	public final static String SEND_DID_EDIT = prefix + "SEND_DID_EDIT";
 	public final static String SEND_NOTE_ARRAYLIST = prefix
 			+ "SEND_NOTE_ARRAYLIST";
-	public final static String SEND_LIST_INDEX = prefix + "SEND_SAVED_LIST_INDEX";
-	public final static String SEND_CHANGED_LIST_INDEX = prefix + "SEND_EDITED_LIST_INDEX";
+	public final static String SEND_LIST_INDEX = prefix
+			+ "SEND_SAVED_LIST_INDEX";
+	public final static String SEND_CHANGED_LIST_INDEX = prefix
+			+ "SEND_EDITED_LIST_INDEX";
 	public final static String SEND_CURRENT_PAGE = prefix + "SEND_CURRENT_PAGE";
 
 	private static int tests = 0;
-	private static SaveManager saveManager;
+	private static SaveManager saveManage;
 	public static ArrayList<NoteList> lists = new ArrayList<NoteList>();
 
 	public final static String SAVE_LIST = prefix + "SAVE_LIST_NUMBER";
@@ -29,13 +31,13 @@ public class Resource {
 	public final static String SAVE_NOTE_AMOUNT = prefix + "SAVE_NOTE_AMOUNT";
 	public final static String SAVE_NOTE_TEXT = prefix + "SAVE_NOTE_TEXT";
 	public final static String SAVE_MAKE_ID = prefix + "SAVE_MAKE_ID";
-	
+
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
 	public final static String STRING_ADD_LIST = "Add new list";
 
 	public static void gatherListsFromSave(SharedPreferences preference) {
 		saveManager = new SaveManager(preference);
-		saveManager.print();
+		System.out.println(saveManager);
 
 		int listAmount = saveManager.getInt(SAVE_LIST_AMOUNT, 0);
 		if (listAmount == 0)
@@ -52,11 +54,12 @@ public class Resource {
 			int id = ids[c];
 			ArrayList<String> notes = new ArrayList<String>();
 			String name = saveManager.getString(SAVE_LIST_NAME + id, "No Name");
-			int noteAmount = saveManager.getInt(SAVE_LIST + id + SAVE_NOTE_AMOUNT, 0);
+			int noteAmount = saveManager.getInt(SAVE_LIST + id
+					+ SAVE_NOTE_AMOUNT, 0);
 			int nc = -1;
 			while (++nc < noteAmount) {
-				notes.add(saveManager.getString(SAVE_LIST + id + SAVE_NOTE_TEXT + nc,
-						"No Note"));
+				notes.add(saveManager.getString(SAVE_LIST + id + SAVE_NOTE_TEXT
+						+ nc, "No Note"));
 			}
 			while (lists.size() <= c)
 				lists.add(null);
@@ -72,35 +75,37 @@ public class Resource {
 		return list.notes.size() - 1;
 	}
 
-	public static void editNoteText(int listIndex, int noteIndex, String newValue) {
+	public static void editNoteText(int listIndex, int noteIndex,
+			String newValue) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
 		list.notes.set(noteIndex, newValue);
 	}
-	
-	public static int moveNote(int oldListIndex, int oldNoteIndex, int newListIndex) {
+
+	public static int moveNote(int oldListIndex, int oldNoteIndex,
+			int newListIndex) {
 		lists.get(oldListIndex).changed = true;
 		lists.get(newListIndex).changed = true;
-		
+
 		String note = lists.get(oldListIndex).notes.get(oldNoteIndex);
 		lists.get(oldListIndex).notes.remove(oldNoteIndex);
 		lists.get(newListIndex).notes.add(note);
-		
+
 		return lists.get(newListIndex).notes.size() - 1;
 	}
-	
+
 	public static void deleteNote(int listIndex, int noteIndex) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
 		list.notes.remove(noteIndex);
 	}
-	
+
 	public static void deleteNotes(int[] listIndexes, int[][] noteIndexes) {
 		int i = -1;
-		while(++i < listIndexes.length) {
+		while (++i < listIndexes.length) {
 			int listIndex = listIndexes[i];
 			lists.get(listIndex).changed = true;
-			for(int c = 0; c < noteIndexes[i].length; c++) {
+			for (int c = 0; c < noteIndexes[i].length; c++) {
 				lists.get(listIndex).notes.remove(noteIndexes[i][c]);
 			}
 		}
@@ -109,7 +114,7 @@ public class Resource {
 	public static String getNote(int listIndex, int noteIndex) {
 		return lists.get(listIndex).notes.get(noteIndex);
 	}
-	
+
 	public static int addList() {
 		return addList("");
 	}
@@ -121,8 +126,8 @@ public class Resource {
 
 		saveManager.save(SAVE_LIST_AMOUNT, listIndex + 1)
 				.save(SAVE_LIST_ID + listIndex, id)
-				.save(SAVE_LIST_NAME + id, name)
-				.save(SAVE_MAKE_ID, id + 1).commit();
+				.save(SAVE_LIST_NAME + id, name).save(SAVE_MAKE_ID, id + 1)
+				.commit();
 
 		return listIndex;
 	}
@@ -144,7 +149,7 @@ public class Resource {
 
 		// remove list
 		saveManager.removeIfContains(SAVE_LIST + id);
-		//update ids
+		// update ids
 		saveManager.remove(SAVE_LIST_ID + listAmount);
 		if (listAmount > 0) {
 			// read old ids
@@ -164,7 +169,7 @@ public class Resource {
 		}
 
 		saveManager.commit();
-		saveManager.print();
+		System.out.println(saveManager);
 	}
 
 	public static void applyNoteChanges() {
@@ -176,7 +181,8 @@ public class Resource {
 				if (oldNoteAmount > newNoteAmount) {
 					int c = newNoteAmount - 1;
 					while (++c < oldNoteAmount) {
-						saveManager.remove(SAVE_LIST + list.id + SAVE_NOTE_TEXT + c);
+						saveManager.remove(SAVE_LIST + list.id + SAVE_NOTE_TEXT
+								+ c);
 					}
 				}
 

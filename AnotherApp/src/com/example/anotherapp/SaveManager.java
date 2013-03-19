@@ -1,76 +1,92 @@
 package com.example.anotherapp;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import android.content.SharedPreferences;
 
+//Thought to be sort of a library class, which can be added to any project
+//Could extend SharedPreferences, but i like it more this way, might create conflicts with SharedPreferences functions and variables otherwise
 public class SaveManager {
-	private SharedPreferences saves;
-	private ArrayList<String> keys = new ArrayList<String>();
+	private SharedPreferences.Editor editor;
+	private HashMap<String, Object> saves = new HashMap<String, Object>();
 
 	public SaveManager(SharedPreferences preference) {
-		saves = preference;
-		Map<String, ?> all = saves.getAll();
-		for (Entry<String, ?> x : all.entrySet()) {
-			keys.add(x.getKey());
+		editor = preference.edit();
+		Map<String, ?> all = preference.getAll();
+		for (Entry<String, ?> entry : all.entrySet()) {
+			saves.put(entry.getKey(), entry.getValue());
 		}
 	}
 
-	public int get(String key, int defValue) {
-		return saves.getInt(key, defValue);
+	public int getInt(String key, int defaultValue) {
+		return saves.containsKey(key) && saves.get(key) instanceof Integer ? (Integer) saves
+				.get(key) : defaultValue;
 	}
 
-	public String get(String key, String defValue) {
-		return saves.getString(key, defValue);
+	public int getInt(String key) {
+		return getInt(key, 0);
 	}
 
-	public boolean get(String key, boolean defValue) {
-		return saves.getBoolean(key, defValue);
+	public String getString(String key, String defaultValue) {
+		return saves.containsKey(key) && saves.get(key) instanceof String ? (String) saves
+				.get(key) : defaultValue;
 	}
 
-	public void commit() {
-		saves.edit().commit();
+	public String getString(String key) {
+		return getString(key, null);
+	}
+
+	public boolean getBoolean(String key, boolean defaultValue) {
+		return saves.containsKey(key) && saves.get(key) instanceof Boolean ? (Boolean) saves
+				.get(key) : defaultValue;
+	}
+
+	public boolean getBoolean(String key) {
+		return getBoolean(key, false);
 	}
 
 	public SaveManager save(String key, int value) {
-		saves.edit().putInt(key, value).commit();
-		keys.add(key);
+		editor.putInt(key, value);
+		saves.put(key, value);
 		return this;
 	}
 
 	public SaveManager save(String key, boolean value) {
-		saves.edit().putBoolean(key, value).commit();
-		keys.add(key);
+		editor.putBoolean(key, value);
+		saves.put(key, value);
 		return this;
 	}
 
 	public SaveManager save(String key, String value) {
-		saves.edit().putString(key, value).commit();
-		keys.add(key);
+		editor.putString(key, value);
+		saves.put(key, value);
 		return this;
 	}
 
 	public void remove(String key) {
-		saves.edit().remove(key);
-		keys.remove(key);
+		editor.remove(key);
+		saves.remove(key);
 	}
 
-	public void removeIfContains(String query) {
-		for (String key : keys) {
-			if (key.contains(query))
-				remove(key);
+	public void removeIfKeyContains(String query) {
+		for (Entry<String, Object> entry : saves.entrySet()) {
+			if (saves.containsKey(query))
+				remove(entry.getKey());
 		}
 	}
 
-	public void print() {
-		Map<String, ?> all = saves.getAll();
-		int i = -1;
-		for (Entry<String, ?> x : all.entrySet()) {
-			System.out.println(keys.get(++i) + ", " + x.getValue());
+	public void commit() {
+		editor.commit();
+	}
+
+	public String toString() {
+		StringBuilder sz = new StringBuilder("Amount of variales: "
+				+ saves.size() + "\n");
+		for (Entry<String, Object> entry : saves.entrySet()) {
+			sz.append(entry.getKey() + ", " + entry.getValue() + "\n");
 		}
-		System.out.println("Amount of variales: " + i);
+		return sz.toString();
 	}
 
 }
