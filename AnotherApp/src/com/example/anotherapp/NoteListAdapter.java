@@ -63,7 +63,7 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		holder.titleTextView.setText(currentNote.getTitle());
+		holder.titleTextView.setText(currentNote.note);
 
 		// This is where we'll do all the setup for the list item
 

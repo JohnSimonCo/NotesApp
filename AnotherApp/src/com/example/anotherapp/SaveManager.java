@@ -88,6 +88,15 @@ public class SaveManager {
 		}
 		return newMap;
 	}
+	
+	public int getFractionSizeFromQuery(String query) {
+		int count = 0;
+		for (Entry<String, Object> entry : saves.entrySet()) {
+			if (saves.containsKey(query))
+				count++;
+		}
+		return count;
+	}
 
 	public void commit() {
 		editor.commit();

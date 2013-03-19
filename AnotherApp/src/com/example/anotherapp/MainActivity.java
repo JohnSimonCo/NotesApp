@@ -21,7 +21,6 @@ import android.widget.EditText;
 
 public class MainActivity extends FragmentActivity {
 
-	public static boolean PORTRAIT;
 	public SectionsPagerAdapter sectionsPagerAdapter;
 	public CustomViewPager viewPager;
 
@@ -42,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		PORTRAIT = getResources().getBoolean(R.bool.portrait);
+		Resource.PORTRAIT = getResources().getBoolean(R.bool.portrait);
 		context = this;
 		Resource.gatherListsFromSave(getPreferences(Context.MODE_PRIVATE));
 
@@ -132,7 +131,7 @@ public class MainActivity extends FragmentActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_add_list:
-			int listIndex = Resource.addList();
+			int listIndex = Resource.addList("");
 			viewPager.setCurrentItem(listIndex, true);
 			editName.expandActionView();
 			return true;
@@ -211,8 +210,6 @@ public class MainActivity extends FragmentActivity {
 			if (Resource.lists.size() > 0) {
 				Bundle args = new Bundle();
 				args.putInt(Resource.SEND_LIST_INDEX, position);
-				args.putStringArrayList(Resource.SEND_NOTE_ARRAYLIST,
-						Resource.lists.get(position).notes);
 				fragment.setArguments(args);
 			} else {
 				fragment = new NoListFragment();

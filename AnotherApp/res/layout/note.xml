@@ -5,18 +5,18 @@
 
     <TextView
         android:id="@+id/list_item_title"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="21sp"
-        android:textIsSelectable="false"
-        android:maxLines="2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-    <TextView
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:maxLines="2"
+        android:textIsSelectable="false"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:text="14-3-2013"	/>
+        android:text="1997-11-26" />
 
 </LinearLayout>

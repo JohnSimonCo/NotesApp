@@ -1,6 +1,8 @@
 package com.example.anotherapp;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -48,7 +50,8 @@ public class NoteDetailFragment extends Fragment {
 		changedListIndex = listIndex;
 		noteIndex = getArguments().getInt(Resource.SEND_NOTE_INDEX, -1);
 		savedNote = (noteIndex == -1) ? null : Resource.getNote(listIndex,
-				noteIndex);
+				noteIndex).note;
+
 		String editedNote = savedNote;
 		int changedListIndex = listIndex;
 		boolean didEdit = false;
@@ -111,7 +114,7 @@ public class NoteDetailFragment extends Fragment {
 		String note = noteView.getText().toString();
 		if (!note.equals("")) {
 			if (noteIndex == -1) {
-				noteIndex = Resource.addNote(changedListIndex, note);
+				noteIndex = Resource.addNote(changedListIndex, "Title", note, "Image", new Date(10000));
 			} else {
 				Resource.editNoteText(listIndex, noteIndex, note);
 				if (listIndex != changedListIndex) {

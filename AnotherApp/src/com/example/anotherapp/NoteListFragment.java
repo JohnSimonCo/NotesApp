@@ -1,22 +1,23 @@
 package com.example.anotherapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-public class NoteListFragment extends ListFragment {
-	public ArrayList<Note> notes = new ArrayList<Note>();
+public class NoteListFragment extends Fragment {
+//	public ArrayList<Note> notes = new ArrayList<Note>();
 	public int index;
 
 	public ListView listView;
@@ -35,18 +36,16 @@ public class NoteListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		loadData();
+		listView = (ListView) view.findViewById(R.id.adapter_view);
+//		loadData();
 		
 		adapter = new NoteListAdapter(getActivity());
-		adapter.setListItems(notes);
+		adapter.setListItems(Resource.lists.get(index).notes);
 		
-		setListAdapter(adapter);
+		listView.setAdapter(adapter);
 		
-		getListView().setOnItemClickListener(onItemClick);
-		getListView().setOnItemLongClickListener(onLongClick);
-		
-		
+		listView.setOnItemClickListener(onItemClick);
+		listView.setOnItemLongClickListener(onLongClick);
 		
 //		getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 	}
@@ -68,13 +67,13 @@ public class NoteListFragment extends ListFragment {
 		}
 	};
 	
-	public void loadData() {
-		//TODO Follow this example but make it work
-		for (int i = 0; i < 5; i++) {
-			Note n = new Note("Hej");
-			notes.add(n);
-		}
-	}
+//	public void loadData() {
+//		//TODO Follow this example but make it work
+//		for (Note ; i < 5; i++) {
+//			Note n = new Note("Title", "Note", "Image", new Date(10000));
+//			notes.add(n);
+//		}
+//	}
 
 	AdapterView.OnItemLongClickListener onLongClick = new AdapterView.OnItemLongClickListener() {
 		@Override

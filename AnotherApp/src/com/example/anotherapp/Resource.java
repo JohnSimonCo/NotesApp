@@ -1,11 +1,9 @@
 package com.example.anotherapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-
-import android.R.integer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -32,12 +30,18 @@ public class Resource {
 	// "SAVE_LIST_AMOUNT";
 	public final static String SAVE_LIST_NAME = prefix + "SAVE_LIST_NAME";
 	public final static String SAVE_LIST_ID = prefix + "SAVE_LIST_ID";
-	public final static String SAVE_NOTE_AMOUNT = prefix + "SAVE_NOTE_AMOUNT";
+	// public final static String SAVE_NOTE_AMOUNT = prefix +
+	// "SAVE_NOTE_AMOUNT";
+	public final static String SAVE_NOTE_TITLE = prefix + "SAVE_NOTE_TITLE";
 	public final static String SAVE_NOTE_TEXT = prefix + "SAVE_NOTE_TEXT";
+	public final static String SAVE_NOTE_IMAGE = prefix + "SAVE_NOTE_IMAGE";
+	public final static String SAVE_NOTE_DATE = prefix + "SAVE_NOTE_DATE";
 	public final static String SAVE_MAKE_ID = prefix + "SAVE_MAKE_ID";
 
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
 	public final static String STRING_ADD_LIST = "Add new list";
+	
+	public static boolean PORTRAIT;
 
 	public static void gatherListsFromSave(SharedPreferences preference) {
 		saveManager = new SaveManager(preference);
@@ -48,50 +52,58 @@ public class Resource {
 
 		HashMap<String, Object> ids = saveManager
 				.getFractionFromQuery(SAVE_LIST_ID);
-
 		for (Entry<String, Object> entry : ids.entrySet()) {
 			int id = (Integer) entry.getValue();
-			ArrayList<String> notes = convertToArrayList(saveManager
-					.getFractionFromQuery(SAVE_LIST + id + SAVE_NOTE_TEXT));
 			String name = saveManager.getString(SAVE_LIST_NAME + id,
 					STRING_UNNAMED_LIST);
-			lists.add(new NoteList(name, id, notes));
+			ArrayList<Note> notes = new ArrayList<Note>();
+			int i = -1;
+			// this happens to be the size if saved correctly
+			int size = saveManager.getFractionSizeFromQuery(SAVE_LIST + id
+					+ SAVE_NOTE_TEXT);
+			while (++i < size) {
+				notes.add(new Note(saveManager.getString(SAVE_LIST + id
+						+ SAVE_NOTE_TITLE), saveManager.getString(SAVE_LIST
+						+ id + SAVE_NOTE_TEXT), saveManager.getString(SAVE_LIST
+						+ id + SAVE_NOTE_IMAGE), new Date(10000)));
+			}
+
+			lists.add(new NoteList(name, id, new ArrayList<Note>()));
 		}
 
 	}
 
-	public static Object[] convertToArray(HashMap<String, Object> hashMap) {
-		Object[] array = new Object[hashMap.size()];
-		int i = -1;
-		for (Entry<String, Object> entry : hashMap.entrySet()) {
-			array[++i] = entry.getValue();
-		}
-		return array;
-	}
-
-	public static ArrayList<String> convertToArrayList(
-			HashMap<String, Object> hashMap) {
-		ArrayList<String> arrayList = new ArrayList<String>();
-		int i = -1;
-		for (Entry<String, Object> entry : hashMap.entrySet()) {
-			arrayList.add((String) entry.getValue());
-		}
-		return arrayList;
-	}
-
-	public static int addNote(int listIndex, String note) {
+	public static int addNote(int listIndex, String title, String note,
+			String image, Date date) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
-		list.notes.add(note);
+		list.notes.add(new Note(title, note, image, date));
 
 		return list.notes.size() - 1;
 	}
 
-	public static void editNoteText(int listIndex, int noteIndex,
-			String newValue) {
+	public static void editNoteTitle(int listIndex, int noteIndex,
+			String newTitle) {
+		editNote(listIndex, noteIndex).title = newTitle;
+	}
+
+	public static void editNoteText(int listIndex, int noteIndex, String newNote) {
+		editNote(listIndex, noteIndex).note = newNote;
+	}
+
+	public static void editNoteImage(int listIndex, int noteIndex,
+			String newImage) {
+		editNote(listIndex, noteIndex).image = newImage;
+	}
+
+	public static void editNoteDate(int listIndex, int noteIndex, Date newDate) {
+		editNote(listIndex, noteIndex).date = newDate;
+	}
+
+	private static Note editNote(int listIndex, int noteIndex) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
-		list.notes.set(noteIndex, newValue);
+		return list.notes.get(noteIndex);
 	}
 
 	public static int moveNote(int oldListIndex, int oldNoteIndex,
@@ -99,7 +111,7 @@ public class Resource {
 		lists.get(oldListIndex).changed = true;
 		lists.get(newListIndex).changed = true;
 
-		String note = lists.get(oldListIndex).notes.get(oldNoteIndex);
+		Note note = lists.get(oldListIndex).notes.get(oldNoteIndex);
 		lists.get(oldListIndex).notes.remove(oldNoteIndex);
 		lists.get(newListIndex).notes.add(note);
 
@@ -107,9 +119,7 @@ public class Resource {
 	}
 
 	public static void deleteNote(int listIndex, int noteIndex) {
-		NoteList list = lists.get(listIndex);
-		list.changed = true;
-		list.notes.remove(noteIndex);
+		lists.get(listIndex).notes.remove(editNote(listIndex, noteIndex));
 	}
 
 	public static void deleteNotes(int[] listIndexes, int[][] noteIndexes) {
@@ -123,21 +133,16 @@ public class Resource {
 		}
 	}
 
-	public static String getNote(int listIndex, int noteIndex) {
+	public static Note getNote(int listIndex, int noteIndex) {
 		return lists.get(listIndex).notes.get(noteIndex);
-	}
-
-	public static int addList() {
-		return addList("");
 	}
 
 	public static int addList(String name) {
 		int listIndex = lists.size();
-		int id = saveManagers.getInt(SAVE_MAKE_ID, 0);
-		lists.add(new NoteList(name, id, new ArrayList<String>()));
+		int id = saveManager.getInt(SAVE_MAKE_ID, 0);
+		lists.add(new NoteList(name, id, new ArrayList<Note>()));
 
-		saveManagers.save(SAVE_LIST_AMOUNT, listIndex + 1)
-				.save(SAVE_LIST_ID + listIndex, id)
+		saveManager.save(SAVE_LIST_ID + listIndex, id)
 				.save(SAVE_LIST_NAME + id, name).save(SAVE_MAKE_ID, id + 1)
 				.commit();
 
@@ -146,67 +151,50 @@ public class Resource {
 
 	public static void editListName(int index, String newValue) {
 		lists.get(index).name = newValue;
-
-		saveManagers.save(SAVE_LIST_NAME + lists.get(index).id, newValue)
+		saveManager.save(SAVE_LIST_NAME + lists.get(index).id, newValue)
 				.commit();
 	}
 
 	public static void deleteList(int index) {
 		int id = lists.get(index).id;
 		lists.remove(index);
-
 		int listAmount = lists.size();
-		int oldListAmount = listAmount + 1;
-		saveManagers.save(SAVE_LIST_AMOUNT, listAmount);
 
 		// remove list
-		saveManagers.removeIfContains(SAVE_LIST + id);
-		// update ids
-		saveManagers.remove(SAVE_LIST_ID + listAmount);
+		saveManager.removeFromQuery(SAVE_LIST + id);
+		saveManager.remove(SAVE_LIST_NAME + id);
+		saveManager.remove(SAVE_LIST_ID + listAmount);
 		if (listAmount > 0) {
-			// read old ids
-			ArrayList<Integer> ids = new ArrayList<Integer>();
-			int i = -1;
-			while (++i < oldListAmount) {
-				int indexId = saveManagers.getInt(SAVE_LIST_ID + i, 0);
-				if (indexId != id)
-					ids.add(indexId);
-			}
-
 			// rewrite ids
-			i = -1;
-			while (++i < ids.size()) {
-				saveManagers.save(SAVE_LIST_ID + i, ids.get(i));
+			int c = -1;
+			int i = -1;
+			while (++c < listAmount) {
+				i++;
+				int oldId = saveManager.getInt(SAVE_LIST_ID + c, 0);
+				if (oldId != id)
+					saveManager.save(SAVE_LIST_ID + i, oldId);
 			}
 		}
-
-		saveManagers.commit();
-		System.out.println(saveManagers);
+		saveManager.commit();
+		System.out.println(saveManager);
 	}
 
 	public static void applyNoteChanges() {
 		for (NoteList list : lists) {
 			if (list.changed) {
-				int oldNoteAmount = saveManagers.getInt(SAVE_LIST + list.id
-						+ SAVE_NOTE_AMOUNT, 0);
-				int newNoteAmount = list.notes.size();
-				if (oldNoteAmount > newNoteAmount) {
-					int c = newNoteAmount - 1;
-					while (++c < oldNoteAmount) {
-						saveManagers.remove(SAVE_LIST + list.id
-								+ SAVE_NOTE_TEXT + c);
-					}
-				}
-
+				saveManager.removeFromQuery(SAVE_LIST + list.id);
 				int i = -1;
-				while (++i < newNoteAmount) {
-					saveManagers.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
-							list.notes.get(i));
+				while (++i < list.notes.size()) {
+					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TITLE + i,
+							list.notes.get(i).title);
+					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
+							list.notes.get(i).note);
+					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_IMAGE + i,
+							list.notes.get(i).image);
+					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_DATE + i,
+							list.notes.get(i).date.toString());
 				}
-				saveManagers.save(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
-						newNoteAmount);
-
-				saveManagers.commit();
+				saveManager.commit();
 			}
 		}
 	}
