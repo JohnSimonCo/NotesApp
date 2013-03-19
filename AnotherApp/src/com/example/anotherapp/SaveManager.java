@@ -18,15 +18,15 @@ public class SaveManager {
 		}
 	}
 
-	public int getInt(String key, int defValue) {
+	public int get(String key, int defValue) {
 		return saves.getInt(key, defValue);
 	}
 
-	public String getString(String key, String defValue) {
+	public String get(String key, String defValue) {
 		return saves.getString(key, defValue);
 	}
 
-	public boolean getBoolean(String key, boolean defValue) {
+	public boolean get(String key, boolean defValue) {
 		return saves.getBoolean(key, defValue);
 	}
 
