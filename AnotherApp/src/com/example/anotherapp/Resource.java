@@ -19,7 +19,7 @@ public class Resource {
 	public final static String SEND_CURRENT_PAGE = prefix + "SEND_CURRENT_PAGE";
 
 	private static int tests = 0;
-	private static SharedPreferences saves;
+	private static SaveManager saveManager;
 	public static ArrayList<NoteList> lists = new ArrayList<NoteList>();
 
 	public final static String SAVE_LIST = prefix + "SAVE_LIST_NUMBER";
@@ -33,29 +33,29 @@ public class Resource {
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
 	public final static String STRING_ADD_LIST = "Add new list";
 
-	public static void gatherListsFromSave(SharedPreferences preferences) {
-		saves = preferences;
-		printSavedVariables();
+	public static void gatherListsFromSave(SharedPreferences preference) {
+		saveManager = new SaveManager(preference);
+		saveManager.print();
 
-		int listAmount = saves.getInt(SAVE_LIST_AMOUNT, 0);
+		int listAmount = saveManager.getInt(SAVE_LIST_AMOUNT, 0);
 		if (listAmount == 0)
 			return;
 
 		int pc = -1;
 		int[] ids = new int[listAmount];
 		while (++pc < listAmount) {
-			ids[pc] = saves.getInt(SAVE_LIST_ID + pc, -1);
+			ids[pc] = saveManager.getInt(SAVE_LIST_ID + pc, -1);
 		}
 
 		int c = -1;
 		while (++c < ids.length) {
 			int id = ids[c];
 			ArrayList<String> notes = new ArrayList<String>();
-			String name = saves.getString(SAVE_LIST_NAME + id, "No Name");
-			int noteAmount = saves.getInt(SAVE_LIST + id + SAVE_NOTE_AMOUNT, 0);
+			String name = saveManager.getString(SAVE_LIST_NAME + id, "No Name");
+			int noteAmount = saveManager.getInt(SAVE_LIST + id + SAVE_NOTE_AMOUNT, 0);
 			int nc = -1;
 			while (++nc < noteAmount) {
-				notes.add(saves.getString(SAVE_LIST + id + SAVE_NOTE_TEXT + nc,
+				notes.add(saveManager.getString(SAVE_LIST + id + SAVE_NOTE_TEXT + nc,
 						"No Note"));
 			}
 			while (lists.size() <= c)
@@ -116,14 +116,13 @@ public class Resource {
 
 	public static int addList(String name) {
 		int listIndex = lists.size();
-		System.out.println(saves == null);
-		int id = saves.getInt(SAVE_MAKE_ID, 0);
+		int id = saveManager.getInt(SAVE_MAKE_ID, 0);
 		lists.add(new NoteList(name, id, new ArrayList<String>()));
 
-		saves.edit().putInt(SAVE_LIST_AMOUNT, listIndex + 1)
-				.putInt(SAVE_LIST_ID + listIndex, id)
-				.putString(SAVE_LIST_NAME + id, name)
-				.putInt(SAVE_MAKE_ID, id + 1).commit();
+		saveManager.save(SAVE_LIST_AMOUNT, listIndex + 1)
+				.save(SAVE_LIST_ID + listIndex, id)
+				.save(SAVE_LIST_NAME + id, name)
+				.save(SAVE_MAKE_ID, id + 1).commit();
 
 		return listIndex;
 	}
@@ -131,7 +130,7 @@ public class Resource {
 	public static void editListName(int index, String newValue) {
 		lists.get(index).name = newValue;
 
-		saves.edit().putString(SAVE_LIST_NAME + lists.get(index).id, newValue)
+		saveManager.save(SAVE_LIST_NAME + lists.get(index).id, newValue)
 				.commit();
 	}
 
@@ -141,26 +140,18 @@ public class Resource {
 
 		int listAmount = lists.size();
 		int oldListAmount = listAmount + 1;
-		SharedPreferences.Editor editor = saves.edit();
-		editor.putInt(SAVE_LIST_AMOUNT, listAmount);
+		saveManager.save(SAVE_LIST_AMOUNT, listAmount);
 
 		// remove list
-		int noteAmount = saves.getInt(SAVE_LIST + id + SAVE_NOTE_AMOUNT, 0);
-		editor.remove(SAVE_LIST_NAME + id).remove(
-				SAVE_LIST + id + SAVE_NOTE_AMOUNT);
-
-		int i = -1;
-		while (++i < noteAmount) {
-			editor.remove(SAVE_LIST + id + SAVE_NOTE_TEXT + i);
-		}
-
-		editor.remove(SAVE_LIST_ID + listAmount);
+		saveManager.removeIfContains(SAVE_LIST + id);
+		//update ids
+		saveManager.remove(SAVE_LIST_ID + listAmount);
 		if (listAmount > 0) {
 			// read old ids
 			ArrayList<Integer> ids = new ArrayList<Integer>();
-			i = -1;
+			int i = -1;
 			while (++i < oldListAmount) {
-				int indexId = saves.getInt(SAVE_LIST_ID + i, 0);
+				int indexId = saveManager.getInt(SAVE_LIST_ID + i, 0);
 				if (indexId != id)
 					ids.add(indexId);
 			}
@@ -168,67 +159,37 @@ public class Resource {
 			// rewrite ids
 			i = -1;
 			while (++i < ids.size()) {
-				editor.putInt(SAVE_LIST_ID + i, ids.get(i));
+				saveManager.save(SAVE_LIST_ID + i, ids.get(i));
 			}
 		}
 
-		editor.commit();
-		printSavedVariables();
+		saveManager.commit();
+		saveManager.print();
 	}
 
 	public static void applyNoteChanges() {
 		for (NoteList list : lists) {
 			if (list.changed) {
-				SharedPreferences.Editor editor = saves.edit();
-				int oldNoteAmount = saves.getInt(SAVE_LIST + list.id
+				int oldNoteAmount = saveManager.getInt(SAVE_LIST + list.id
 						+ SAVE_NOTE_AMOUNT, 0);
 				int newNoteAmount = list.notes.size();
 				if (oldNoteAmount > newNoteAmount) {
 					int c = newNoteAmount - 1;
 					while (++c < oldNoteAmount) {
-						editor.remove(SAVE_LIST + list.id + SAVE_NOTE_TEXT + c);
+						saveManager.remove(SAVE_LIST + list.id + SAVE_NOTE_TEXT + c);
 					}
 				}
 
 				int i = -1;
 				while (++i < newNoteAmount) {
-					editor.putString(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
+					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
 							list.notes.get(i));
 				}
-				editor.putInt(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
+				saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
 						newNoteAmount);
 
-				editor.commit();
+				saveManager.commit();
 			}
-		}
-	}
-
-	public static void printSavedVariables() {
-		ArrayList<Integer> ints = new ArrayList<Integer>();
-		ArrayList<String> strings = new ArrayList<String>();
-		ArrayList<String> intKeys = new ArrayList<String>();
-		ArrayList<String> keys = new ArrayList<String>();
-		Map<String, ?> all = saves.getAll();
-		for (Entry<String, ?> x : all.entrySet()) {
-			if (x.getValue().getClass().equals(Integer.class)) {
-				ints.add((Integer) x.getValue());
-				intKeys.add(x.getKey());
-			} else if (x.getValue().getClass().equals(String.class)) {
-				strings.add((String) x.getValue());
-				keys.add(x.getKey());
-			}
-		}
-		System.out.println("Amount of variales: "
-				+ (ints.size() + strings.size()));
-		int i = -1;
-		while (++i < ints.size()) {
-			System.out.println(ints.get(i));
-			System.out.println(intKeys.get(i));
-		}
-		i = -1;
-		while (++i < strings.size()) {
-			System.out.println(strings.get(i));
-			System.out.println(keys.get(i));
 		}
 	}
 
