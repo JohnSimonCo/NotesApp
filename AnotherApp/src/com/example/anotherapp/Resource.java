@@ -1,8 +1,11 @@
 package com.example.anotherapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import android.R.integer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -21,11 +24,12 @@ public class Resource {
 	public final static String SEND_CURRENT_PAGE = prefix + "SEND_CURRENT_PAGE";
 
 	private static int tests = 0;
-	private static SaveManager saveManage;
+	private static SaveManager saveManager;
 	public static ArrayList<NoteList> lists = new ArrayList<NoteList>();
 
 	public final static String SAVE_LIST = prefix + "SAVE_LIST_NUMBER";
-	public final static String SAVE_LIST_AMOUNT = prefix + "SAVE_LIST_AMOUNT";
+	// public final static String SAVE_LIST_AMOUNT = prefix +
+	// "SAVE_LIST_AMOUNT";
 	public final static String SAVE_LIST_NAME = prefix + "SAVE_LIST_NAME";
 	public final static String SAVE_LIST_ID = prefix + "SAVE_LIST_ID";
 	public final static String SAVE_NOTE_AMOUNT = prefix + "SAVE_NOTE_AMOUNT";
@@ -39,32 +43,40 @@ public class Resource {
 		saveManager = new SaveManager(preference);
 		System.out.println(saveManager);
 
-		int listAmount = saveManager.getInt(SAVE_LIST_AMOUNT, 0);
-		if (listAmount == 0)
+		if (saveManager.getSize() < 1)
 			return;
 
-		int pc = -1;
-		int[] ids = new int[listAmount];
-		while (++pc < listAmount) {
-			ids[pc] = saveManager.getInt(SAVE_LIST_ID + pc, -1);
+		HashMap<String, Object> ids = saveManager
+				.getFractionFromQuery(SAVE_LIST_ID);
+
+		for (Entry<String, Object> entry : ids.entrySet()) {
+			int id = (Integer) entry.getValue();
+			ArrayList<String> notes = convertToArrayList(saveManager
+					.getFractionFromQuery(SAVE_LIST + id + SAVE_NOTE_TEXT));
+			String name = saveManager.getString(SAVE_LIST_NAME + id,
+					STRING_UNNAMED_LIST);
+			lists.add(new NoteList(name, id, notes));
 		}
 
-		int c = -1;
-		while (++c < ids.length) {
-			int id = ids[c];
-			ArrayList<String> notes = new ArrayList<String>();
-			String name = saveManager.getString(SAVE_LIST_NAME + id, "No Name");
-			int noteAmount = saveManager.getInt(SAVE_LIST + id
-					+ SAVE_NOTE_AMOUNT, 0);
-			int nc = -1;
-			while (++nc < noteAmount) {
-				notes.add(saveManager.getString(SAVE_LIST + id + SAVE_NOTE_TEXT
-						+ nc, "No Note"));
-			}
-			while (lists.size() <= c)
-				lists.add(null);
-			lists.set(c, new NoteList(name, id, notes));
+	}
+
+	public static Object[] convertToArray(HashMap<String, Object> hashMap) {
+		Object[] array = new Object[hashMap.size()];
+		int i = -1;
+		for (Entry<String, Object> entry : hashMap.entrySet()) {
+			array[++i] = entry.getValue();
 		}
+		return array;
+	}
+
+	public static ArrayList<String> convertToArrayList(
+			HashMap<String, Object> hashMap) {
+		ArrayList<String> arrayList = new ArrayList<String>();
+		int i = -1;
+		for (Entry<String, Object> entry : hashMap.entrySet()) {
+			arrayList.add((String) entry.getValue());
+		}
+		return arrayList;
 	}
 
 	public static int addNote(int listIndex, String note) {
@@ -121,10 +133,10 @@ public class Resource {
 
 	public static int addList(String name) {
 		int listIndex = lists.size();
-		int id = saveManager.getInt(SAVE_MAKE_ID, 0);
+		int id = saveManagers.getInt(SAVE_MAKE_ID, 0);
 		lists.add(new NoteList(name, id, new ArrayList<String>()));
 
-		saveManager.save(SAVE_LIST_AMOUNT, listIndex + 1)
+		saveManagers.save(SAVE_LIST_AMOUNT, listIndex + 1)
 				.save(SAVE_LIST_ID + listIndex, id)
 				.save(SAVE_LIST_NAME + id, name).save(SAVE_MAKE_ID, id + 1)
 				.commit();
@@ -135,7 +147,7 @@ public class Resource {
 	public static void editListName(int index, String newValue) {
 		lists.get(index).name = newValue;
 
-		saveManager.save(SAVE_LIST_NAME + lists.get(index).id, newValue)
+		saveManagers.save(SAVE_LIST_NAME + lists.get(index).id, newValue)
 				.commit();
 	}
 
@@ -145,18 +157,18 @@ public class Resource {
 
 		int listAmount = lists.size();
 		int oldListAmount = listAmount + 1;
-		saveManager.save(SAVE_LIST_AMOUNT, listAmount);
+		saveManagers.save(SAVE_LIST_AMOUNT, listAmount);
 
 		// remove list
-		saveManager.removeIfContains(SAVE_LIST + id);
+		saveManagers.removeIfContains(SAVE_LIST + id);
 		// update ids
-		saveManager.remove(SAVE_LIST_ID + listAmount);
+		saveManagers.remove(SAVE_LIST_ID + listAmount);
 		if (listAmount > 0) {
 			// read old ids
 			ArrayList<Integer> ids = new ArrayList<Integer>();
 			int i = -1;
 			while (++i < oldListAmount) {
-				int indexId = saveManager.getInt(SAVE_LIST_ID + i, 0);
+				int indexId = saveManagers.getInt(SAVE_LIST_ID + i, 0);
 				if (indexId != id)
 					ids.add(indexId);
 			}
@@ -164,37 +176,37 @@ public class Resource {
 			// rewrite ids
 			i = -1;
 			while (++i < ids.size()) {
-				saveManager.save(SAVE_LIST_ID + i, ids.get(i));
+				saveManagers.save(SAVE_LIST_ID + i, ids.get(i));
 			}
 		}
 
-		saveManager.commit();
-		System.out.println(saveManager);
+		saveManagers.commit();
+		System.out.println(saveManagers);
 	}
 
 	public static void applyNoteChanges() {
 		for (NoteList list : lists) {
 			if (list.changed) {
-				int oldNoteAmount = saveManager.getInt(SAVE_LIST + list.id
+				int oldNoteAmount = saveManagers.getInt(SAVE_LIST + list.id
 						+ SAVE_NOTE_AMOUNT, 0);
 				int newNoteAmount = list.notes.size();
 				if (oldNoteAmount > newNoteAmount) {
 					int c = newNoteAmount - 1;
 					while (++c < oldNoteAmount) {
-						saveManager.remove(SAVE_LIST + list.id + SAVE_NOTE_TEXT
-								+ c);
+						saveManagers.remove(SAVE_LIST + list.id
+								+ SAVE_NOTE_TEXT + c);
 					}
 				}
 
 				int i = -1;
 				while (++i < newNoteAmount) {
-					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
+					saveManagers.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
 							list.notes.get(i));
 				}
-				saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
+				saveManagers.save(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
 						newNoteAmount);
 
-				saveManager.commit();
+				saveManagers.commit();
 			}
 		}
 	}

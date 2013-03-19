@@ -18,6 +18,10 @@ public class SaveManager {
 			saves.put(entry.getKey(), entry.getValue());
 		}
 	}
+	
+	public int getSize() {
+		return saves.size();
+	}
 
 	public int getInt(String key, int defaultValue) {
 		return saves.containsKey(key) && saves.get(key) instanceof Integer ? (Integer) saves
@@ -69,11 +73,20 @@ public class SaveManager {
 		saves.remove(key);
 	}
 
-	public void removeIfKeyContains(String query) {
+	public void removeFromQuery(String query) {
 		for (Entry<String, Object> entry : saves.entrySet()) {
 			if (saves.containsKey(query))
 				remove(entry.getKey());
 		}
+	}
+	
+	public HashMap<String, Object> getFractionFromQuery(String query) {
+		HashMap<String, Object> newMap = new HashMap<String, Object>();
+		for (Entry<String, Object> entry : saves.entrySet()) {
+			if (saves.containsKey(query))
+				newMap.put(entry.getKey(), entry.getValue());
+		}
+		return newMap;
 	}
 
 	public void commit() {
