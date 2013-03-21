@@ -1,5 +1,6 @@
 package com.example.anotherapp;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import android.content.Context;
@@ -11,29 +12,26 @@ import android.widget.TextView;
 
 public class NoteListAdapter extends BaseAdapter {
 
-	private LayoutInflater mInflater;
-	private List<Note> mNotes;
-	public static NoteViewHolder holder;
-	
+	private LayoutInflater inflater;
+	private List<Note> notes;
+
 	private Context context;
 
-	public NoteListAdapter(Context ctx) {
-		context = ctx;
-		mInflater = LayoutInflater.from(context);
-	}
-
-	public void setListItems(List<Note> noteList) {
-		mNotes = noteList;
+	public NoteListAdapter(Context context, List<Note> notes) {
+		this.context = context;
+		this.notes = notes;
+		inflater = LayoutInflater.from(context);
 	}
 
 	@Override
 	public int getCount() {
-		return mNotes.size();
+		return notes.size();
+		// return
 	}
 
 	@Override
 	public Object getItem(int pos) {
-		return mNotes.get(pos);
+		return notes.get(pos);
 	}
 
 	@Override
@@ -45,25 +43,31 @@ public class NoteListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		Note currentNote = mNotes.get(position);
+		Note currentNote = notes.get(position);
+		NoteViewHolder holder;
 
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.note, parent, false);
-
+			convertView = inflater.inflate(R.layout.note, parent, false);
 			holder = new NoteViewHolder();
-
 			// This is just for calling findViewById() and saving it to the
 			// holder object
-
+			
+			holder.dateTextView = (TextView) convertView
+					.findViewById(R.id.list_item_date);
 			holder.titleTextView = (TextView) convertView
 					.findViewById(R.id.list_item_title);
+			holder.noteTextView = (TextView) convertView
+					.findViewById(R.id.list_item_note);
 
 			convertView.setTag(holder);
 		} else {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		holder.titleTextView.setText(currentNote.note);
+		
+		holder.dateTextView.setText(DateFormat.getDateInstance().format(currentNote.date));
+		holder.titleTextView.setText(currentNote.title);
+		holder.noteTextView.setText(currentNote.note);
 
 		// This is where we'll do all the setup for the list item
 
@@ -73,7 +77,9 @@ public class NoteListAdapter extends BaseAdapter {
 	public class NoteViewHolder {
 		// Just keep a list of all the views here, it'll give ~30% performence
 		// boost
+		private TextView dateTextView;
 		private TextView titleTextView;
+		private TextView noteTextView;
 	}
 
 }

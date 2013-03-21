@@ -16,7 +16,7 @@ public class NoteList {
 	}
 	@Override
 	public String toString() {
-		return name + " " + id + " " + notes.get(0) + " " + notes.size();
+		return name + ", " + id + ", " + notes.size();
 	}
 	
 }

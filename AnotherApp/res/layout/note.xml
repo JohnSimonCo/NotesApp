@@ -1,7 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/list_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right" />
 
     <TextView
         android:id="@+id/list_item_title"
@@ -14,9 +21,12 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/list_item_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="1997-11-26" />
+        android:fontFamily="sans-serif-condensed"
+        android:maxLines="2"
+        android:textIsSelectable="false"
+        android:textSize="18sp" />
 
 </LinearLayout>

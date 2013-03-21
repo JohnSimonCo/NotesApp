@@ -1,9 +1,5 @@
 package com.example.anotherapp;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -39,10 +33,9 @@ public class NoteListFragment extends Fragment {
 		listView = (ListView) view.findViewById(R.id.adapter_view);
 //		loadData();
 		
-		adapter = new NoteListAdapter(getActivity());
-		adapter.setListItems(Resource.lists.get(index).notes);
-		
+		adapter = new NoteListAdapter(getActivity(), Resource.lists.get(index).notes);
 		listView.setAdapter(adapter);
+		listView.setEmptyView(view.findViewById(R.id.empty));
 		
 		listView.setOnItemClickListener(onItemClick);
 		listView.setOnItemLongClickListener(onLongClick);

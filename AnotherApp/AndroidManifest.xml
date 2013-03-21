@@ -24,8 +24,13 @@
         </activity>
         <activity
             android:name="com.example.anotherapp.NoteDetailActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/new_edit_note" >
+            android:label="@string/new_edit_note"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+        <activity
+            android:name="com.example.anotherapp.NoteDialogActivity"
+            android:label="@string/title_activity_note_dialog"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
     </application>
 

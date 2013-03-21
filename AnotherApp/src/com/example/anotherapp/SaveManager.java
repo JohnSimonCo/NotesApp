@@ -1,5 +1,6 @@
 package com.example.anotherapp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +19,7 @@ public class SaveManager {
 			saves.put(entry.getKey(), entry.getValue());
 		}
 	}
-	
+
 	public int getSize() {
 		return saves.size();
 	}
@@ -30,6 +31,15 @@ public class SaveManager {
 
 	public int getInt(String key) {
 		return getInt(key, 0);
+	}
+	
+	public long getLong(String key, long defaultValue) {
+		return saves.containsKey(key) && saves.get(key) instanceof Long ? (Long) saves
+				.get(key) : defaultValue;
+	}
+
+	public long getLong(String key) {
+		return getLong(key, 0);
 	}
 
 	public String getString(String key, String defaultValue) {
@@ -55,6 +65,12 @@ public class SaveManager {
 		saves.put(key, value);
 		return this;
 	}
+	
+	public SaveManager save(String key, long value) {
+		editor.putLong(key, value);
+		saves.put(key, value);
+		return this;
+	}
 
 	public SaveManager save(String key, boolean value) {
 		editor.putBoolean(key, value);
@@ -74,27 +90,27 @@ public class SaveManager {
 	}
 
 	public void removeFromQuery(String query) {
-		for (Entry<String, Object> entry : saves.entrySet()) {
-			if (saves.containsKey(query))
-				remove(entry.getKey());
-		}
+		ArrayList<String> remove = new ArrayList<String>();
+		for (Entry<String, Object> entry : saves.entrySet())
+			if (entry.getKey().contains(query))
+				remove.add(entry.getKey());
+		for (String key : remove)
+			saves.remove(key);
 	}
-	
+
 	public HashMap<String, Object> getFractionFromQuery(String query) {
 		HashMap<String, Object> newMap = new HashMap<String, Object>();
-		for (Entry<String, Object> entry : saves.entrySet()) {
-			if (saves.containsKey(query))
+		for (Entry<String, Object> entry : saves.entrySet())
+			if (entry.getKey().contains(query))
 				newMap.put(entry.getKey(), entry.getValue());
-		}
 		return newMap;
 	}
-	
+
 	public int getFractionSizeFromQuery(String query) {
 		int count = 0;
-		for (Entry<String, Object> entry : saves.entrySet()) {
-			if (saves.containsKey(query))
+		for (Entry<String, Object> entry : saves.entrySet())
+			if (entry.getKey().contains(query))
 				count++;
-		}
 		return count;
 	}
 
@@ -105,9 +121,8 @@ public class SaveManager {
 	public String toString() {
 		StringBuilder sz = new StringBuilder("Amount of variales: "
 				+ saves.size() + "\n");
-		for (Entry<String, Object> entry : saves.entrySet()) {
+		for (Entry<String, Object> entry : saves.entrySet())
 			sz.append(entry.getKey() + ", " + entry.getValue() + "\n");
-		}
 		return sz.toString();
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -21,33 +22,30 @@ public class Resource {
 			+ "SEND_EDITED_LIST_INDEX";
 	public final static String SEND_CURRENT_PAGE = prefix + "SEND_CURRENT_PAGE";
 
-	private static int tests = 0;
-	private static SaveManager saveManager;
-	public static ArrayList<NoteList> lists = new ArrayList<NoteList>();
-
-	public final static String SAVE_LIST = prefix + "SAVE_LIST_NUMBER";
-	// public final static String SAVE_LIST_AMOUNT = prefix +
-	// "SAVE_LIST_AMOUNT";
-	public final static String SAVE_LIST_NAME = prefix + "SAVE_LIST_NAME";
-	public final static String SAVE_LIST_ID = prefix + "SAVE_LIST_ID";
-	// public final static String SAVE_NOTE_AMOUNT = prefix +
-	// "SAVE_NOTE_AMOUNT";
-	public final static String SAVE_NOTE_TITLE = prefix + "SAVE_NOTE_TITLE";
-	public final static String SAVE_NOTE_TEXT = prefix + "SAVE_NOTE_TEXT";
-	public final static String SAVE_NOTE_IMAGE = prefix + "SAVE_NOTE_IMAGE";
-	public final static String SAVE_NOTE_DATE = prefix + "SAVE_NOTE_DATE";
-	public final static String SAVE_MAKE_ID = prefix + "SAVE_MAKE_ID";
+	public final static String SAVE_LIST = "SAVE_LIST";
+	public final static String SAVE_LIST_NAME = "SAVE_LIST_NAME";
+	public final static String SAVE_LIST_ID = "SAVE_LIST_ID";
+	public final static String SAVE_NOTE_TITLE = "SAVE_NOTE_TITLE";
+	public final static String SAVE_NOTE_TEXT = "SAVE_NOTE_TEXT";
+	public final static String SAVE_NOTE_IMAGE = "SAVE_NOTE_IMAGE";
+	public final static String SAVE_NOTE_DATE = "SAVE_NOTE_DATE";
+	public final static String SAVE_MAKE_ID = "SAVE_MAKE_ID";
 
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
 	public final static String STRING_ADD_LIST = "Add new list";
-	
+
 	public static boolean PORTRAIT;
+
+	private static int tests = 0;
+	private static SaveManager saveManager;
+	public static ArrayList<NoteList> lists = new ArrayList<NoteList>();
 
 	public static void gatherListsFromSave(SharedPreferences preference) {
 		saveManager = new SaveManager(preference);
 		System.out.println(saveManager);
 
-		if (saveManager.getSize() < 1)
+		// Because MAKE_ID will always be present
+		if (saveManager.getSize() <= 1)
 			return;
 
 		HashMap<String, Object> ids = saveManager
@@ -63,12 +61,13 @@ public class Resource {
 					+ SAVE_NOTE_TEXT);
 			while (++i < size) {
 				notes.add(new Note(saveManager.getString(SAVE_LIST + id
-						+ SAVE_NOTE_TITLE), saveManager.getString(SAVE_LIST
-						+ id + SAVE_NOTE_TEXT), saveManager.getString(SAVE_LIST
-						+ id + SAVE_NOTE_IMAGE), new Date(10000)));
+						+ SAVE_NOTE_TITLE + i), saveManager.getString(SAVE_LIST
+						+ id + SAVE_NOTE_TEXT + i), saveManager
+						.getString(SAVE_LIST + id + SAVE_NOTE_IMAGE + i),
+						new Date(saveManager.getLong(SAVE_LIST + id
+								+ SAVE_NOTE_DATE + i))));
 			}
-
-			lists.add(new NoteList(name, id, new ArrayList<Note>()));
+			lists.add(new NoteList(name, id, notes));
 		}
 
 	}
@@ -192,7 +191,7 @@ public class Resource {
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_IMAGE + i,
 							list.notes.get(i).image);
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_DATE + i,
-							list.notes.get(i).date.toString());
+							list.notes.get(i).date.getTime());
 				}
 				saveManager.commit();
 			}

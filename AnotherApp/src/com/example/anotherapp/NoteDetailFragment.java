@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -66,16 +66,39 @@ public class NoteDetailFragment extends Fragment {
 		try {
 			spinner.setSelection(changedListIndex);
 		} catch (Exception e) {
-			// TODO Fix this crash
+			Resource.toast("NoteDetailFragmentWTF");
 			e.printStackTrace();
 		}
 
 		if (editedNote == null || didEdit) {
 			noteView.requestFocus();
 			// Open keyboard
-			InputMethodManager imm = (InputMethodManager) getActivity()
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+			noteView.postDelayed(new Runnable() {
+
+				public void run() {
+					// ((EditText) findViewById(R.id.et_find)).requestFocus();
+					//
+					// InputMethodManager imm = (InputMethodManager)
+					// getSystemService(Context.INPUT_METHOD_SERVICE);
+					// imm.showSoftInput(yourEditText,
+					// InputMethodManager.SHOW_IMPLICIT);
+
+					noteView.dispatchTouchEvent(MotionEvent.obtain(
+							SystemClock.uptimeMillis(),
+							SystemClock.uptimeMillis(),
+							MotionEvent.ACTION_DOWN, 0, 0, 0));
+					noteView.dispatchTouchEvent(MotionEvent.obtain(
+							SystemClock.uptimeMillis(),
+							SystemClock.uptimeMillis(), MotionEvent.ACTION_UP,
+							0, 0, 0));
+
+				}
+			}, 100);
+
+			// InputMethodManager imm = (InputMethodManager) getActivity()
+			// .getSystemService(Context.INPUT_METHOD_SERVICE);
+			// imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 		} else if (editedNote != null) {
 			noteView.setText(editedNote);
 		}
@@ -114,7 +137,8 @@ public class NoteDetailFragment extends Fragment {
 		String note = noteView.getText().toString();
 		if (!note.equals("")) {
 			if (noteIndex == -1) {
-				noteIndex = Resource.addNote(changedListIndex, "Title", note, "Image", new Date(10000));
+				noteIndex = Resource.addNote(changedListIndex, "Title", note,
+						"Image", new Date());
 			} else {
 				Resource.editNoteText(listIndex, noteIndex, note);
 				if (listIndex != changedListIndex) {
@@ -163,8 +187,8 @@ public class NoteDetailFragment extends Fragment {
 			for (NoteList nl : Resource.lists) {
 				listNames.add(nl.name);
 			}
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-					R.layout.spinner_item, listNames);
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+					getActivity(), R.layout.spinner_item, listNames);
 			adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 			spinner.setAdapter(adapter);
 			spinner.setOnItemSelectedListener(onSpinnerClick);
@@ -217,9 +241,9 @@ public class NoteDetailFragment extends Fragment {
 		Resource.applyNoteChanges();
 		// Remove keyboard to prevent bug next onCreateView
 		if (editing) {
-			InputMethodManager imm = (InputMethodManager) getActivity()
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(noteView.getWindowToken(), 0);
+//			InputMethodManager imm = (InputMethodManager) getActivity()
+//					.getSystemService(Context.INPUT_METHOD_SERVICE);
+//			imm.hideSoftInputFromWindow(noteView.getWindowToken(), 0);
 		}
 	}
 }
