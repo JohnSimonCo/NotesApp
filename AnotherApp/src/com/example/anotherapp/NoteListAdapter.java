@@ -51,7 +51,7 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = new NoteViewHolder();
 			// This is just for calling findViewById() and saving it to the
 			// holder object
-			
+
 			holder.dateTextView = (TextView) convertView
 					.findViewById(R.id.list_item_date);
 			holder.titleTextView = (TextView) convertView
@@ -64,9 +64,9 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		
-		holder.dateTextView.setText(DateFormat.getDateInstance().format(currentNote.date));
-		holder.titleTextView.setText(currentNote.title);
+		holder.dateTextView.setText(DateFormat.getDateInstance().format(
+				currentNote.date));
+		holder.titleTextView.setText(Resource.createTitle(currentNote.title, currentNote.note));
 		holder.noteTextView.setText(currentNote.note);
 
 		// This is where we'll do all the setup for the list item

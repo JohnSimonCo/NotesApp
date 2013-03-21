@@ -1,5 +1,13 @@
 package com.example.anotherapp;
 
-public class DialogEditFragment {
+import android.view.View;
 
+public class DialogEditFragment extends DialogFragment {
+
+	@Override
+	public void init(View rootView) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

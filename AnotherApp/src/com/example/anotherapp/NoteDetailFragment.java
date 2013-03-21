@@ -137,8 +137,8 @@ public class NoteDetailFragment extends Fragment {
 		String note = noteView.getText().toString();
 		if (!note.equals("")) {
 			if (noteIndex == -1) {
-				noteIndex = Resource.addNote(changedListIndex, "Title", note,
-						"Image", new Date());
+				noteIndex = Resource.addNote(changedListIndex, "", note,
+						"", new Date());
 			} else {
 				Resource.editNoteText(listIndex, noteIndex, note);
 				if (listIndex != changedListIndex) {

@@ -1,3 +1,4 @@
 NotesApp
 ========
-This is Simon and Johns note app! Penis!
+John and Simons note app project.
+Soon to be released on play store ;)

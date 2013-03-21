@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,6 +14,10 @@ import android.widget.Toast;
 public class Resource {
 	private final static String prefix = "com.android.anotherapp.";
 	public final static String SEND_NOTE_INDEX = prefix + "SEND_NOTE_INDEX";
+	public final static String SEND_NOTE_TITLE = prefix + "SEND_NOTE_TITLE";
+	public final static String SEND_NOTE_TEXT = prefix + "SEND_NOTE_TEXT";
+	public final static String SEND_NOTE_IMAGE = prefix + "SEND_NOTE_IMAGE";
+	public final static String SEND_NOTE_DATE = prefix + "SEND_NOTE_DATE";
 	public final static String SEND_EDITED_NOTE = prefix + "SEND_EDITED_NOTE";
 	public final static String SEND_DID_EDIT = prefix + "SEND_DID_EDIT";
 	public final static String SEND_NOTE_ARRAYLIST = prefix
@@ -196,6 +202,17 @@ public class Resource {
 				saveManager.commit();
 			}
 		}
+	}
+
+	public static String createTitle(String title, String note) {
+		if (title.isEmpty()) {
+			note += " ";
+			Pattern pattern = Pattern.compile("\\w*\\s\\w*\\s");
+			Matcher matcher = pattern.matcher(note);
+			matcher.find();
+			return matcher.group();
+		}
+		return title;
 	}
 
 	public Resource() {

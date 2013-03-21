@@ -1,5 +1,6 @@
 package com.example.anotherapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,6 +49,11 @@ public class NoteListFragment extends Fragment {
 				long id) {
 			
 			//TODO Spring clean
+			
+			Intent intent = new Intent(getActivity(), DialogActivity.class);
+			intent.putExtra(Resource.SEND_NOTE_INDEX, position);
+			intent.putExtra(Resource.SEND_LIST_INDEX, index);
+			startActivity(intent);
 			
 //			if(((MainActivity)getActivity()).actionMode == null) {
 //				Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
