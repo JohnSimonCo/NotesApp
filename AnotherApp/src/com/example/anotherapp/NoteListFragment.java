@@ -24,8 +24,6 @@ public class NoteListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		index = getArguments().getInt(Resource.SEND_LIST_INDEX);
-		// notes =
-		// getArguments().getStringArrayList(Resource.SEND_NOTE_ARRAYLIST);
 		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_note_list, container, false);
 	}
@@ -34,18 +32,18 @@ public class NoteListFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listView = (ListView) view.findViewById(R.id.adapter_view);
-		// loadData();
 
 		// Fixing top and bottom padding of list items which are not included in
 		// invisible dividers. Using invisible header views, only minor
-		// performence hit
+		// performance hit
 		
-		TextView v = new TextView(getActivity());
-		v.setHeight(8);
-		
-		listView.addHeaderView(v);
-		listView.addFooterView(v);
-		
+		//TODO fix this
+//		TextView v = new TextView(getActivity());
+//		v.setHeight(8);
+//		
+//		listView.addHeaderView(v);
+//		listView.addFooterView(v);
+
 		listView.setHeaderDividersEnabled(false);
 
 		adapter = new NoteListAdapter(getActivity(),
@@ -55,8 +53,6 @@ public class NoteListFragment extends Fragment {
 
 		listView.setOnItemClickListener(onItemClick);
 		listView.setOnItemLongClickListener(onLongClick);
-
-		// getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 	}
 
 	private OnItemClickListener onItemClick = new OnItemClickListener() {

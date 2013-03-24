@@ -6,7 +6,6 @@ public class DialogEditFragment extends DialogFragment {
 
 	@Override
 	public void init(View rootView) {
-		// TODO Auto-generated method stub
 		
 	}
 	

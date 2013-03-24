@@ -36,7 +36,7 @@ public class MainActivity extends FragmentActivity {
 		context = this;
 		setContentView(R.layout.activity_main);
 		Resource.portrait = getResources().getBoolean(R.bool.portrait);
-		if (savedInstanceState == null && Resource.lists.size() < 1)
+		if (savedInstanceState == null || Resource.lists.size() < 1)
 			Resource.gatherListsFromSave(getPreferences(Context.MODE_PRIVATE));
 		viewPager = (CustomViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter = new SectionsPagerAdapter(
@@ -44,7 +44,6 @@ public class MainActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			viewPager.setCurrentItem(getIntent().getIntExtra(
 					Resource.SEND_CURRENT_PAGE, 0));
-
 		}
 	}
 
