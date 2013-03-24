@@ -137,10 +137,10 @@ public class NoteDetailFragment extends Fragment {
 		String note = noteView.getText().toString();
 		if (!note.equals("")) {
 			if (noteIndex == -1) {
-				noteIndex = Resource.addNote(changedListIndex, "", note,
-						"", new Date());
+				noteIndex = Resource.addNote(changedListIndex, new Note("", note,
+						"", new Date()));
 			} else {
-				Resource.editNoteText(listIndex, noteIndex, note);
+//				Resource.editNoteText(listIndex, noteIndex, note);
 				if (listIndex != changedListIndex) {
 					noteIndex = Resource.moveNote(listIndex, noteIndex,
 							changedListIndex);
@@ -240,10 +240,10 @@ public class NoteDetailFragment extends Fragment {
 		super.onPause();
 		Resource.applyNoteChanges();
 		// Remove keyboard to prevent bug next onCreateView
-		if (editing) {
+//		if (editing) {
 //			InputMethodManager imm = (InputMethodManager) getActivity()
 //					.getSystemService(Context.INPUT_METHOD_SERVICE);
 //			imm.hideSoftInputFromWindow(noteView.getWindowToken(), 0);
-		}
+//		}
 	}
 }

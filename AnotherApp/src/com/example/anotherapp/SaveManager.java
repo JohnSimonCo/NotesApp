@@ -10,9 +10,11 @@ import android.content.SharedPreferences;
 //Could extend SharedPreferences, but i like it more this way, might create conflicts with SharedPreferences functions and variables otherwise
 public class SaveManager {
 	private SharedPreferences.Editor editor;
+	public SharedPreferences pref;
 	private HashMap<String, Object> saves = new HashMap<String, Object>();
 
 	public SaveManager(SharedPreferences preference) {
+		pref = preference;
 		editor = preference.edit();
 		Map<String, ?> all = preference.getAll();
 		for (Entry<String, ?> entry : all.entrySet()) {
@@ -95,7 +97,7 @@ public class SaveManager {
 			if (entry.getKey().contains(query))
 				remove.add(entry.getKey());
 		for (String key : remove)
-			saves.remove(key);
+			remove(key);
 	}
 
 	public HashMap<String, Object> getFractionFromQuery(String query) {

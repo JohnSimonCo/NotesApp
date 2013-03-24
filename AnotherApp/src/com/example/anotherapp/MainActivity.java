@@ -117,7 +117,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_new_note:
-			Intent intent = new Intent(this, NoteDetailActivity.class);
+			Intent intent = new Intent(this, DialogActivity.class);
 			intent.putExtra(Resource.SEND_LIST_INDEX,
 					viewPager.getCurrentItem());
 			startActivity(intent);

@@ -20,10 +20,10 @@ public class Note {
 	}
 
 	public String generateTitle() {
-		if (title.isEmpty()) {
+		if (title != null && title.isEmpty()) {
 			StringBuilder sz = new StringBuilder();
 			String[] words = this.note.split("\n")[0].split(" ");
-			for(int i = 0; i < words.length && i < TITLE_WORD_COUNT; i++)
+			for (int i = 0; i < words.length && i < TITLE_WORD_COUNT; i++)
 				sz.append(words[i] + " ");
 			return sz.toString();
 		}

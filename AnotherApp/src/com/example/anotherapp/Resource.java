@@ -3,7 +3,9 @@ package com.example.anotherapp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -75,38 +77,43 @@ public class Resource {
 
 	}
 
-	public static int addNote(int listIndex, String title, String note,
-			String image, Date date) {
+	public static int addNote(int listIndex, Note newNote) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
-		list.notes.add(new Note(title, note, image, date));
+		list.notes.add(newNote);
 
 		return list.notes.size() - 1;
 	}
-
-	public static void editNoteTitle(int listIndex, int noteIndex,
-			String newTitle) {
-		editNote(listIndex, noteIndex).title = newTitle;
-	}
-
-	public static void editNoteText(int listIndex, int noteIndex, String newNote) {
-		editNote(listIndex, noteIndex).note = newNote;
-	}
-
-	public static void editNoteImage(int listIndex, int noteIndex,
-			String newImage) {
-		editNote(listIndex, noteIndex).image = newImage;
-	}
-
-	public static void editNoteDate(int listIndex, int noteIndex, Date newDate) {
-		editNote(listIndex, noteIndex).date = newDate;
-	}
-
-	private static Note editNote(int listIndex, int noteIndex) {
+	
+	public static void editNote(int listIndex, int noteIndex, Note newNote) {
 		NoteList list = lists.get(listIndex);
 		list.changed = true;
-		return list.notes.get(noteIndex);
+		list.notes.set(noteIndex, newNote);
 	}
+	
+//	public static void editNoteTitle(int listIndex, int noteIndex,
+//			String newTitle) {
+//		editNote(listIndex, noteIndex).title = newTitle;
+//	}
+//
+//	public static void editNoteText(int listIndex, int noteIndex, String newNote) {
+//		editNote(listIndex, noteIndex).note = newNote;
+//	}
+//
+//	public static void editNoteImage(int listIndex, int noteIndex,
+//			String newImage) {
+//		editNote(listIndex, noteIndex).image = newImage;
+//	}
+//
+//	public static void editNoteDate(int listIndex, int noteIndex, Date newDate) {
+//		editNote(listIndex, noteIndex).date = newDate;
+//	}
+//
+//	private static Note editNote(int listIndex, int noteIndex) {
+//		NoteList list = lists.get(listIndex);
+//		list.changed = true;
+//		return list.notes.get(noteIndex);
+//	}
 
 	public static int moveNote(int oldListIndex, int oldNoteIndex,
 			int newListIndex) {
@@ -121,7 +128,9 @@ public class Resource {
 	}
 
 	public static void deleteNote(int listIndex, int noteIndex) {
-		lists.get(listIndex).notes.remove(editNote(listIndex, noteIndex));
+		NoteList list = lists.get(listIndex);
+		list.changed = true;
+		list.notes.remove(noteIndex);
 	}
 
 	public static void deleteNotes(int[] listIndexes, int[][] noteIndexes) {
@@ -165,39 +174,50 @@ public class Resource {
 		// remove list
 		saveManager.removeFromQuery(SAVE_LIST + id);
 		saveManager.remove(SAVE_LIST_NAME + id);
-		saveManager.remove(SAVE_LIST_ID + listAmount);
+		saveManager.remove(SAVE_LIST_ID + index);
 		if (listAmount > 0) {
 			// rewrite ids
 			int c = -1;
 			int i = -1;
 			while (++c < listAmount) {
 				i++;
-				int oldId = saveManager.getInt(SAVE_LIST_ID + c, 0);
+				int oldId = saveManager.getInt(SAVE_LIST_ID + c, -1);
 				if (oldId != id)
 					saveManager.save(SAVE_LIST_ID + i, oldId);
 			}
 		}
 		saveManager.commit();
 		System.out.println(saveManager);
+//		Map<String, ?> all = saveManager.pref.getAll();
+//		StringBuilder sz = new StringBuilder("Amount of variales: "
+//				+ all.size() + "\n");
+//		for (Entry<String, ?> entry : all.entrySet()) {
+//			sz.append(entry.getKey() + ", " + entry.getValue() + "\n");
+//		}
+//		System.out.println(sz.toString());
 	}
 
 	public static void applyNoteChanges() {
+		toast();
 		for (NoteList list : lists) {
 			if (list.changed) {
 				saveManager.removeFromQuery(SAVE_LIST + list.id);
 				for (int i = 0; i < list.notes.size(); i++) {
+					if(list.notes.get(i).title != null)
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TITLE + i,
 							list.notes.get(i).title);
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
 							list.notes.get(i).note);
+					if(list.notes.get(i).image != null)
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_IMAGE + i,
 							list.notes.get(i).image);
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_DATE + i,
 							list.notes.get(i).date.getTime());
 				}
-				saveManager.commit();
 			}
 		}
+		saveManager.commit();
+		System.out.println(saveManager);
 	}
 
 	public Resource() {

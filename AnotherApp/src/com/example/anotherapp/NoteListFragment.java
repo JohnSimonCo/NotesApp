@@ -36,13 +36,13 @@ public class NoteListFragment extends Fragment {
 		// Fixing top and bottom padding of list items which are not included in
 		// invisible dividers. Using invisible header views, only minor
 		// performance hit
-		
-		//TODO fix this
-//		TextView v = new TextView(getActivity());
-//		v.setHeight(8);
-//		
-//		listView.addHeaderView(v);
-//		listView.addFooterView(v);
+
+		// TODO fix this
+		// TextView v = new TextView(getActivity());
+		// v.setHeight(8);
+		//
+		// listView.addHeaderView(v);
+		// listView.addFooterView(v);
 
 		listView.setHeaderDividersEnabled(false);
 
@@ -55,12 +55,18 @@ public class NoteListFragment extends Fragment {
 		listView.setOnItemLongClickListener(onLongClick);
 	}
 
+	@Override
+	public void onResume() {
+		adapter.notifyDataSetChanged();
+		super.onResume();
+	}
+
 	private OnItemClickListener onItemClick = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View v, int position,
 				long id) {
 			Intent intent = new Intent(getActivity(), DialogActivity.class);
-			intent.putExtra(Resource.SEND_NOTE_INDEX, position);
 			intent.putExtra(Resource.SEND_LIST_INDEX, index);
+			intent.putExtra(Resource.SEND_NOTE_INDEX, position);
 			startActivity(intent);
 		}
 	};

@@ -18,7 +18,9 @@ public class DialogActivity extends Activity {
 		setContentView(R.layout.activity_note_detail);
 		list = getIntent().getIntExtra(Resource.SEND_LIST_INDEX, -1);
 		if (savedInstanceState == null) {
-			selectFragment(getIntent().getIntExtra(Resource.SEND_NOTE_INDEX, -1) < 0, getIntent().getExtras());
+			selectFragment(getIntent()
+					.getIntExtra(Resource.SEND_NOTE_INDEX, -1) < 0, getIntent()
+					.getExtras());
 			getFragmentManager().beginTransaction()
 					.replace(R.id.fragment_container, fragment).commit();
 		} else
@@ -27,15 +29,16 @@ public class DialogActivity extends Activity {
 	}
 
 	public void selectFragment(boolean mode, Bundle bundle) {
-		fragment = mode == EDIT_MODE ? new DialogEditFragment() : new DialogViewFragment();
+		fragment = mode == EDIT_MODE ? new DialogEditFragment()
+				: new DialogViewFragment();
 		fragment.setArguments(bundle);
 	}
-	
-	public void changeFragment(boolean mode) {
-		selectFragment(mode, new Bundle());
-		//Should animate and shits
+
+	public void changeFragment(Bundle bundle) {
+		selectFragment(mode = !mode, bundle);
+		// Should animate and shits
 		getFragmentManager().beginTransaction()
-		.replace(R.id.fragment_container, fragment).commit();
+				.replace(R.id.fragment_container, fragment).commit();
 	}
 
 	@Override
