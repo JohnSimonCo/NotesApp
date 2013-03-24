@@ -17,8 +17,8 @@ public class DialogViewFragment extends DialogFragment {
 		titleView = (TextView) rootView.findViewById(R.id.dialog_view_title);
 		noteView = (TextView) rootView.findViewById(R.id.dialog_view_note);
 
-		dateView.setText(Resource.createDate(note.date));
-		titleView.setText(Resource.createTitle(note.title, note.note));
+		dateView.setText(note.generateDateString());
+		titleView.setText(note.generateTitle());
 		noteView.setText(note.note);
 	}
 }

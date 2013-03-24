@@ -1,13 +1,9 @@
 package com.example.anotherapp;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -41,7 +37,7 @@ public class Resource {
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
 	public final static String STRING_ADD_LIST = "Add new list";
 
-	public static boolean PORTRAIT;
+	public static boolean portrait;
 
 	private static int tests = 0;
 	private static SaveManager saveManager;
@@ -202,27 +198,6 @@ public class Resource {
 				saveManager.commit();
 			}
 		}
-	}
-
-	private final static int TITLE_WORD_COUNT = 2;
-	public static String createTitle(String title, String note) {
-		if (title.isEmpty()) {
-			int spaces = 0;
-			StringBuilder sz = new StringBuilder();
-			for (char c : title.toCharArray()) {
-				if (c == '\r' || c == '\n')
-					c = ' ';
-				if (c == ' ' && ++spaces >= TITLE_WORD_COUNT)
-					break;
-				sz.append(c);
-			}
-			return sz.toString();
-		}
-		return title;
-	}
-
-	public static String createDate(Date date) {
-		return DateFormat.getDateInstance().format(date);
 	}
 
 	public Resource() {
