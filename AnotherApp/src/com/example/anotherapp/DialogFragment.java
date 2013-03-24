@@ -24,8 +24,8 @@ public abstract class DialogFragment extends Fragment {
 				container, false);
 		listIndex = getArguments().getInt(Resource.SEND_LIST_INDEX);
 		noteIndex = getArguments().getInt(Resource.SEND_NOTE_INDEX, -1);
-		savedNote = noteIndex >= 0 ? Resource.getNote(listIndex,
-				noteIndex) : null;
+		savedNote = noteIndex >= 0 ? Resource.getNote(listIndex, noteIndex)
+				: new Note(null, null, null, null);
 		init(rootView);
 		return rootView;
 	}
