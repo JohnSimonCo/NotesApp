@@ -25,19 +25,17 @@ public class Note {
 			int words = 0;
 			StringBuilder sz = new StringBuilder();
 			for (char c : note.toCharArray()) {
-				if (c == '\r' || c == '\n' || c == ' ')
-					c = ' ';
-				else {
-					if (spaceBefore) {
-						spaceBefore = false;
-						if (++words >= TITLE_WORD_COUNT)
-							break;
-					}
-				}
-				if (!spaceBefore)
+				if (c == '\r' || c == '\n')
+					break;
+				if (spaceBefore && c != ' ') {
+					spaceBefore = false;
+					if (++words >= TITLE_WORD_COUNT)
+						break;
+				} else if (!spaceBefore)
 					sz.append(c);
-				if (c == ' ')
+				if (c == ' ') {
 					spaceBefore = true;
+				}
 			}
 			return sz.toString();
 		}
