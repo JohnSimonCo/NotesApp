@@ -2,9 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/card_background"
     android:padding="8dp" >
 
     <TextView
+        android:fontFamily="sans-seif-light"
         android:id="@+id/list_item_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

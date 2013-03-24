@@ -1,5 +1,7 @@
 package com.example.anotherapp;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +29,8 @@ public class MainActivity extends FragmentActivity {
 	public MenuItem deleteList;
 	public MenuItem renameList;
 	public MenuItem addList;
+	
+	Calendar c = Calendar.getInstance();
 
 	public static Activity context;
 
