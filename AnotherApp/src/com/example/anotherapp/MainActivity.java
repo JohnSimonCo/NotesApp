@@ -35,8 +35,8 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		context = this;
 		setContentView(R.layout.activity_main);
-		Resource.PORTRAIT = getResources().getBoolean(R.bool.portrait);
-		if (savedInstanceState == null || Resource.lists.size() < 1)
+		Resource.portrait = getResources().getBoolean(R.bool.portrait);
+		if (savedInstanceState == null && Resource.lists.size() < 1)
 			Resource.gatherListsFromSave(getPreferences(Context.MODE_PRIVATE));
 		viewPager = (CustomViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(sectionsPagerAdapter = new SectionsPagerAdapter(

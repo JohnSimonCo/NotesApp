@@ -13,10 +13,10 @@ public class NoteListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private List<Note> notes;
 
-//	private Context context;
+	// private Context context;
 
 	public NoteListAdapter(Context context, List<Note> notes) {
-//		this.context = context;
+		// this.context = context;
 		this.notes = notes;
 		inflater = LayoutInflater.from(context);
 	}
@@ -62,8 +62,8 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		holder.dateTextView.setText(Resource.createDate(note.date));
-		holder.titleTextView.setText(Resource.createTitle(note.title, note.note));
+		holder.dateTextView.setText(note.generateDateString());
+		holder.titleTextView.setText(note.generateTitle());
 		holder.noteTextView.setText(note.note);
 
 		// This is where we'll do all the setup for the list item
