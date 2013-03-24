@@ -21,29 +21,17 @@ public class Note {
 
 	public String generateTitle() {
 		if (title.isEmpty()) {
-			boolean spaceBefore = false;
-			int words = 0;
 			StringBuilder sz = new StringBuilder();
-			for (char c : note.toCharArray()) {
-				if (c == '\r' || c == '\n')
-					break;
-				if (spaceBefore && c != ' ') {
-					spaceBefore = false;
-					if (++words >= TITLE_WORD_COUNT)
-						break;
-				} else if (!spaceBefore)
-					sz.append(c);
-				if (c == ' ') {
-					spaceBefore = true;
-				}
-			}
+			String[] words = this.note.split("\n")[0].split(" ");
+			for(int i = 0; i < words.length && i < TITLE_WORD_COUNT; i++)
+				sz.append(words[i] + " ");
 			return sz.toString();
 		}
 		return title;
 	}
 
 	public String generateDateString() {
-		return DateFormat.getDateInstance().format(date);
+		return DateFormat.getDateInstance().format(date).toUpperCase();
 	}
 
 	@Override
