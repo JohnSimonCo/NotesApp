@@ -6,7 +6,7 @@ import android.widget.TextView;
 public class DialogViewFragment extends DialogFragment {
 
 	// TODO fix this shit up (the image)
-	View image;
+	View imageView;
 	TextView dateView;
 	TextView titleView;
 	TextView noteView;
@@ -17,10 +17,8 @@ public class DialogViewFragment extends DialogFragment {
 		titleView = (TextView) rootView.findViewById(R.id.dialog_view_title);
 		noteView = (TextView) rootView.findViewById(R.id.dialog_view_note);
 
-		String note = getArguments().getString(Resource.SEND_NOTE_TEXT);
-		dateView.setText(getArguments().getString(Resource.SEND_NOTE_DATE));
-		titleView.setText(Resource.createTitle(
-				getArguments().getString(Resource.SEND_NOTE_TITLE), note));
+		dateView.setText(date);
+		titleView.setText(title);
 		noteView.setText(note);
 	}
 }

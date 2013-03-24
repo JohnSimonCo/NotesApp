@@ -12,7 +12,8 @@ public abstract class DialogFragment extends Fragment {
 	public String title;
 	public String note;
 
-	public Note savedNote;
+	public Note savedNote = new Note(null, null, null, null);
+	public boolean newNote = false;
 
 	public int listIndex;
 	public int noteIndex;
@@ -24,8 +25,10 @@ public abstract class DialogFragment extends Fragment {
 				container, false);
 		listIndex = getArguments().getInt(Resource.SEND_LIST_INDEX);
 		noteIndex = getArguments().getInt(Resource.SEND_NOTE_INDEX, -1);
-		savedNote = noteIndex >= 0 ? Resource.getNote(listIndex, noteIndex)
-				: new Note(null, null, null, null);
+		newNote = noteIndex < 0;
+		if(!newNote) {
+			savedNote = Resource.getNote(listIndex, noteIndex);
+		}
 		init(rootView);
 		return rootView;
 	}
