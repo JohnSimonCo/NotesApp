@@ -45,6 +45,8 @@ public class NoteListFragment extends Fragment {
 		
 		listView.addHeaderView(v);
 		listView.addFooterView(v);
+		
+		listView.setHeaderDividersEnabled(false);
 
 		adapter = new NoteListAdapter(getActivity(),
 				Resource.lists.get(index).notes);

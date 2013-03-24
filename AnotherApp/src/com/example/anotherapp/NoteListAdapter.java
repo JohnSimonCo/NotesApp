@@ -62,7 +62,7 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		holder.dateTextView.setText(note.generateDateString());
+		holder.dateTextView.setText(note.generateDateString().toUpperCase());
 		holder.titleTextView.setText(note.generateTitle());
 		holder.noteTextView.setText(note.note);
 

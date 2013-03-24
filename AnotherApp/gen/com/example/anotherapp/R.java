@@ -14,9 +14,11 @@ public final class R {
         public static final int portrait=0x7f040000;
     }
     public static final class color {
+        public static final int accent_color=0x7f050002;
+        public static final int background=0x7f050004;
         public static final int note_selected=0x7f050001;
         public static final int note_unselected=0x7f050000;
-        public static final int pressed_holoorange=0x7f050002;
+        public static final int pressed_holoorange=0x7f050003;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -89,9 +91,9 @@ public final class R {
         public static final int edit_ui=0x7f0a000e;
         public static final int empty=0x7f0a0012;
         public static final int fragment_container=0x7f0a0002;
-        public static final int list_item_date=0x7f0a0013;
+        public static final int list_item_date=0x7f0a0014;
         public static final int list_item_note=0x7f0a0015;
-        public static final int list_item_title=0x7f0a0014;
+        public static final int list_item_title=0x7f0a0013;
         public static final int menu_add_list=0x7f0a0016;
         public static final int menu_discard=0x7f0a001a;
         public static final int menu_done=0x7f0a0019;
