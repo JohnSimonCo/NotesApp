@@ -6,6 +6,7 @@
     android:padding="8dp" >
 
     <TextView
+        android:inputType="textCapCharacters"
         android:fontFamily="sans-seif-light"
         android:id="@+id/list_item_date"
         android:layout_width="wrap_content"

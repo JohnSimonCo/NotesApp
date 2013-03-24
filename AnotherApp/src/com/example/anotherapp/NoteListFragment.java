@@ -10,9 +10,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class NoteListFragment extends Fragment {
-//	public ArrayList<Note> notes = new ArrayList<Note>();
+	// public ArrayList<Note> notes = new ArrayList<Note>();
 	public int index;
 
 	public ListView listView;
@@ -23,7 +24,8 @@ public class NoteListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		index = getArguments().getInt(Resource.SEND_LIST_INDEX);
-	//	notes = getArguments().getStringArrayList(Resource.SEND_NOTE_ARRAYLIST);
+		// notes =
+		// getArguments().getStringArrayList(Resource.SEND_NOTE_ARRAYLIST);
 		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_note_list, container, false);
 	}
@@ -32,16 +34,27 @@ public class NoteListFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		listView = (ListView) view.findViewById(R.id.adapter_view);
-//		loadData();
+		// loadData();
+
+		// Fixing top and bottom padding of list items which are not included in
+		// invisible dividers. Using invisible header views, only minor
+		// performence hit
 		
-		adapter = new NoteListAdapter(getActivity(), Resource.lists.get(index).notes);
+		TextView v = new TextView(getActivity());
+		v.setHeight(8);
+		
+		listView.addHeaderView(v);
+		listView.addFooterView(v);
+
+		adapter = new NoteListAdapter(getActivity(),
+				Resource.lists.get(index).notes);
 		listView.setAdapter(adapter);
 		listView.setEmptyView(view.findViewById(R.id.empty));
-		
+
 		listView.setOnItemClickListener(onItemClick);
 		listView.setOnItemLongClickListener(onLongClick);
-		
-//		getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+		// getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 	}
 
 	private OnItemClickListener onItemClick = new OnItemClickListener() {
@@ -61,6 +74,5 @@ public class NoteListFragment extends Fragment {
 			return false;
 		}
 	};
-	
-}
 
+}
