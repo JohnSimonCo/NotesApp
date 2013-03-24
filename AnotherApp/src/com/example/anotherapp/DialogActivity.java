@@ -1,8 +1,7 @@
 package com.example.anotherapp;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.app.Fragment;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class DialogActivity extends Activity {
