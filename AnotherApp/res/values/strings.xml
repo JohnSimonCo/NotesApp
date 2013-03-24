@@ -15,7 +15,7 @@
     <string name="choose_list">Choose list</string>
     <string name="action_settings">Settings</string>
     <string name="no_lists">You currently have no lists.\nAdd one by pressing the list icon in the actionbar</string>
-    <string name="no_notes">This list is currently empty.\nAdd a note by pressing the plus in the actionbar</string>
+    <string name="no_notes">This list is currently empty, add a note by pressing the plus icon</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_note_dialog">NoteDialogActivity</string>
