@@ -1,8 +1,6 @@
 package com.example.anotherapp;
 
-import java.text.DateFormat;
 import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +13,10 @@ public class NoteListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private List<Note> notes;
 
-	private Context context;
+//	private Context context;
 
 	public NoteListAdapter(Context context, List<Note> notes) {
-		this.context = context;
+//		this.context = context;
 		this.notes = notes;
 		inflater = LayoutInflater.from(context);
 	}
@@ -43,7 +41,7 @@ public class NoteListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		Note currentNote = notes.get(position);
+		Note note = notes.get(position);
 		NoteViewHolder holder;
 
 		if (convertView == null) {
@@ -64,10 +62,9 @@ public class NoteListAdapter extends BaseAdapter {
 			holder = (NoteViewHolder) convertView.getTag();
 		}
 
-		holder.dateTextView.setText(DateFormat.getDateInstance().format(
-				currentNote.date));
-		holder.titleTextView.setText(Resource.createTitle(currentNote.title, currentNote.note));
-		holder.noteTextView.setText(currentNote.note);
+		holder.dateTextView.setText(Resource.createDate(note.date));
+		holder.titleTextView.setText(Resource.createTitle(note.title, note.note));
+		holder.noteTextView.setText(note.note);
 
 		// This is where we'll do all the setup for the list item
 

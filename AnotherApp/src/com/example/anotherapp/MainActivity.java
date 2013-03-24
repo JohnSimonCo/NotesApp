@@ -14,8 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class MainActivity extends FragmentActivity {
-	//Hej Simon, do you even lift?
-
 	public SectionsPagerAdapter sectionsPagerAdapter;
 	public CustomViewPager viewPager;
 
