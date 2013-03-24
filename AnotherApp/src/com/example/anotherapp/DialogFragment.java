@@ -7,13 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public abstract class DialogFragment extends Fragment {
-
-	public String date;
-	public String title;
-	public String note;
-
-	public Note savedNote = new Note(null, null, null, null);
-	public boolean newNote = false;
+	public Note note;
+	public boolean newNote;
 
 	public int listIndex;
 	public int noteIndex;
@@ -26,9 +21,8 @@ public abstract class DialogFragment extends Fragment {
 		listIndex = getArguments().getInt(Resource.SEND_LIST_INDEX);
 		noteIndex = getArguments().getInt(Resource.SEND_NOTE_INDEX, -1);
 		newNote = noteIndex < 0;
-		if(!newNote) {
-			savedNote = Resource.getNote(listIndex, noteIndex);
-		}
+		note = !newNote ? Resource.getNote(listIndex, noteIndex)
+				: new Note(null, null, null, null);
 		init(rootView);
 		return rootView;
 	}

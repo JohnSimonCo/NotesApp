@@ -1,5 +1,6 @@
 package com.example.anotherapp;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -188,8 +189,7 @@ public class Resource {
 		for (NoteList list : lists) {
 			if (list.changed) {
 				saveManager.removeFromQuery(SAVE_LIST + list.id);
-				int i = -1;
-				while (++i < list.notes.size()) {
+				for (int i = 0; i < list.notes.size(); i++) {
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TITLE + i,
 							list.notes.get(i).title);
 					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
@@ -204,15 +204,25 @@ public class Resource {
 		}
 	}
 
+	private final static int TITLE_WORD_COUNT = 2;
 	public static String createTitle(String title, String note) {
 		if (title.isEmpty()) {
-			note += " ";
-			Pattern pattern = Pattern.compile("\\w*\\s\\w*\\s");
-			Matcher matcher = pattern.matcher(note);
-			matcher.find();
-			return matcher.group();
+			int spaces = 0;
+			StringBuilder sz = new StringBuilder();
+			for (char c : title.toCharArray()) {
+				if (c == '\r' || c == '\n')
+					c = ' ';
+				if (c == ' ' && ++spaces >= TITLE_WORD_COUNT)
+					break;
+				sz.append(c);
+			}
+			return sz.toString();
 		}
 		return title;
+	}
+
+	public static String createDate(Date date) {
+		return DateFormat.getDateInstance().format(date);
 	}
 
 	public Resource() {
