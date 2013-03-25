@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="note_unselected">#ffffff</color>
+    <color name="note_selected">#8CCADE</color>
+    <color name="accent_color">#FF8800</color>
+
+</resources>
