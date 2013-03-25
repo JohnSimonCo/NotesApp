@@ -33,6 +33,7 @@ public class Resource {
 	public final static String SAVE_NOTE_TEXT = "SAVE_NOTE_TEXT";
 	public final static String SAVE_NOTE_IMAGE = "SAVE_NOTE_IMAGE";
 	public final static String SAVE_NOTE_DATE = "SAVE_NOTE_DATE";
+	public final static String SAVE_NOTE_AMOUNT = "SAVE_NOTE_AMOUNT";
 	public final static String SAVE_MAKE_ID = "SAVE_MAKE_ID";
 
 	public final static String STRING_UNNAMED_LIST = "Unnamed list";
@@ -60,9 +61,7 @@ public class Resource {
 					STRING_UNNAMED_LIST);
 			ArrayList<Note> notes = new ArrayList<Note>();
 			int i = -1;
-			// this happens to be the size if saved correctly
-			int size = saveManager.getFractionSizeFromQuery(SAVE_LIST + id
-					+ SAVE_NOTE_TEXT);
+			int size = saveManager.getInt(SAVE_LIST + id + SAVE_NOTE_AMOUNT);
 			while (++i < size) {
 				notes.add(new Note(saveManager.getString(SAVE_LIST + id
 						+ SAVE_NOTE_TITLE + i), saveManager.getString(SAVE_LIST
@@ -189,36 +188,35 @@ public class Resource {
 		}
 		saveManager.commit();
 		System.out.println(saveManager);
-		// Map<String, ?> all = saveManager.pref.getAll();
-		// StringBuilder sz = new StringBuilder("Amount of variales: "
-		// + all.size() + "\n");
-		// for (Entry<String, ?> entry : all.entrySet()) {
-		// sz.append(entry.getKey() + ", " + entry.getValue() + "\n");
-		// }
-		// System.out.println(sz.toString());
 	}
 
 	public static void applyNoteChanges() {
-		toast();
 		for (NoteList list : lists) {
 			if (list.changed) {
 				saveManager.removeFromQuery(SAVE_LIST + list.id);
 				for (int i = 0; i < list.notes.size(); i++) {
-					if (list.notes.get(i).title != null)
+					String title = list.notes.get(i).title;
+					String note = list.notes.get(i).note;
+					String image = list.notes.get(i).image;
+					long date = list.notes.get(i).date.getTime();
+					if (!title.isEmpty())
 						saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TITLE
-								+ i, list.notes.get(i).title);
-					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT + i,
-							list.notes.get(i).note);
-					if (list.notes.get(i).image != null)
+								+ i, title);
+					if (!note.isEmpty())
+						saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_TEXT
+								+ i, note);
+					if (!image.isEmpty())
 						saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_IMAGE
-								+ i, list.notes.get(i).image);
-					saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_DATE + i,
-							list.notes.get(i).date.getTime());
+								+ i, image);
+					if (date > 0)
+						saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_DATE
+								+ i, date);
 				}
+				saveManager.save(SAVE_LIST + list.id + SAVE_NOTE_AMOUNT,
+						list.notes.size());
 			}
 		}
 		saveManager.commit();
-		System.out.println(saveManager);
 	}
 
 	public Resource() {

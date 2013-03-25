@@ -34,7 +34,7 @@ public class SaveManager {
 	public int getInt(String key) {
 		return getInt(key, 0);
 	}
-	
+
 	public long getLong(String key, long defaultValue) {
 		return saves.containsKey(key) && saves.get(key) instanceof Long ? (Long) saves
 				.get(key) : defaultValue;
@@ -50,7 +50,7 @@ public class SaveManager {
 	}
 
 	public String getString(String key) {
-		return getString(key, null);
+		return getString(key, "");
 	}
 
 	public boolean getBoolean(String key, boolean defaultValue) {
@@ -67,7 +67,7 @@ public class SaveManager {
 		saves.put(key, value);
 		return this;
 	}
-	
+
 	public SaveManager save(String key, long value) {
 		editor.putLong(key, value);
 		saves.put(key, value);
@@ -98,6 +98,18 @@ public class SaveManager {
 				remove.add(entry.getKey());
 		for (String key : remove)
 			remove(key);
+		removeFromQuery(query, null);
+	}
+
+	public void removeFromQuery(String query, String exception) {
+		ArrayList<String> remove = new ArrayList<String>();
+		for (Entry<String, Object> entry : saves.entrySet())
+			if (entry.getKey().contains(query)
+					&& (exception != null && !entry.getKey()
+							.contains(exception)))
+				remove.add(entry.getKey());
+		for (String key : remove)
+			remove(key);
 	}
 
 	public HashMap<String, Object> getFractionFromQuery(String query) {
@@ -108,13 +120,14 @@ public class SaveManager {
 		return newMap;
 	}
 
-	public int getFractionSizeFromQuery(String query) {
-		int count = 0;
-		for (Entry<String, Object> entry : saves.entrySet())
-			if (entry.getKey().contains(query))
-				count++;
-		return count;
-	}
+	//
+	// public int getFractionSizeFromQuery(String query) {
+	// int count = 0;
+	// for (Entry<String, Object> entry : saves.entrySet())
+	// if (entry.getKey().contains(query))
+	// count++;
+	// return count;
+	// }
 
 	public void commit() {
 		editor.commit();

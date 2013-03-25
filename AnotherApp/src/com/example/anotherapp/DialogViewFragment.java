@@ -9,7 +9,6 @@ import android.widget.TextView;
 public class DialogViewFragment extends DialogFragment {
 
 	// TODO fix this shit up (the image)
-	private View imageView;
 	private TextView dateView;
 	private TextView titleView;
 	private TextView noteView;

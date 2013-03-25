@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 
 public class DialogEditFragment extends DialogFragment {
-	private View imageView;
 	private EditText titleView;
 	private EditText noteView;
 
@@ -19,6 +18,7 @@ public class DialogEditFragment extends DialogFragment {
 
 		titleView = (EditText) rootView.findViewById(R.id.dialog_edit_title);
 		noteView = (EditText) rootView.findViewById(R.id.dialog_edit_note);
+		noteView.requestFocus();
 		titleView.setText(savedInstanceState == null ? note.title
 				: savedInstanceState.getString(Resource.SEND_NOTE_TITLE));
 		noteView.setText(savedInstanceState == null ? note.note
@@ -48,8 +48,11 @@ public class DialogEditFragment extends DialogFragment {
 	public View.OnClickListener onDoneClick = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Note note = new Note(titleView.getText().toString(), noteView
-					.getText().toString(), null, new Date());
+			String noteText = noteView.getText().toString();
+			String titleText = titleView.getText().toString();
+			if (noteText.isEmpty() && titleText.isEmpty())
+				return;
+			Note note = new Note(titleText, noteText, "", new Date());
 			if (newNote) {
 				newNote = false;
 				noteIndex = Resource.addNote(listIndex, note);
