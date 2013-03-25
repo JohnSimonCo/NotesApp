@@ -13,8 +13,8 @@
         android:dividerHeight="8dp"
         android:drawSelectorOnTop="true"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" />
+        android:paddingLeft="80dp"
+        android:paddingRight="80dp" />
 
     <TextView
         android:id="@+id/empty"
