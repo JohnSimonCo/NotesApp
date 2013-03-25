@@ -166,6 +166,10 @@ public class Resource {
 				.commit();
 	}
 
+	public static void moveList(int oldListIndex, int newListIndex) {
+		ArrayList<NoteList> oldList = (ArrayList<NoteList>) lists.clone();
+	}
+
 	public static void deleteList(int index) {
 		int id = lists.get(index).id;
 		lists.remove(index);

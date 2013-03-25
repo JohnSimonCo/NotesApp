@@ -28,10 +28,7 @@ public abstract class DialogFragment extends Fragment {
 						null, null, null, null));
 		return rootView;
 	}
-
 	protected abstract void init(View rootView, Bundle savedInstanceState,
 			Note note);
-
 	protected abstract int getContentView();
-
 }
