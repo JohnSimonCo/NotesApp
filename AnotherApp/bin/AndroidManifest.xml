@@ -29,8 +29,7 @@
         </activity>
         <activity
             android:name="com.example.anotherapp.DialogActivity"
-            android:label="@string/title_activity_note_dialog"
-            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+            android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar" >
         </activity>
     </application>
 
