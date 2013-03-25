@@ -18,7 +18,7 @@ public class DialogActivity extends Activity {
 		setContentView(R.layout.activity_note_detail);
 		list = getIntent().getIntExtra(Resource.SEND_LIST_INDEX, -1);
 		if (savedInstanceState == null) {
-			selectFragment(getIntent()
+			selectFragment(mode = getIntent()
 					.getIntExtra(Resource.SEND_NOTE_INDEX, -1) < 0, getIntent()
 					.getExtras());
 			getFragmentManager().beginTransaction()
