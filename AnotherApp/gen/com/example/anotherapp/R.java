@@ -87,8 +87,8 @@ public final class R {
         public static final int dialog_edit_title=0x7f0a0008;
         public static final int dialog_list_title=0x7f0a0005;
         public static final int dialog_overflow=0x7f0a000d;
-        public static final int dialog_popup_delete=0x7f0a0026;
-        public static final int dialog_popup_share=0x7f0a0027;
+        public static final int dialog_popup_delete=0x7f0a0025;
+        public static final int dialog_popup_share=0x7f0a0026;
         public static final int dialog_view_date=0x7f0a0007;
         public static final int dialog_view_image=0x7f0a0006;
         public static final int dialog_view_note=0x7f0a0010;
@@ -106,14 +106,13 @@ public final class R {
         public static final int menu_add_list=0x7f0a001b;
         public static final int menu_discard=0x7f0a001f;
         public static final int menu_done=0x7f0a001e;
-        public static final int menu_list_spinner=0x7f0a0028;
+        public static final int menu_list_spinner=0x7f0a0027;
         public static final int menu_move_list=0x7f0a0021;
         public static final int menu_name_list=0x7f0a0020;
         public static final int menu_new_note=0x7f0a001d;
         public static final int menu_remove_list=0x7f0a001c;
-        public static final int menu_remove_note=0x7f0a0029;
-        public static final int menu_remove_notes=0x7f0a0025;
-        public static final int menu_select_list=0x7f0a0024;
+        public static final int menu_remove_note=0x7f0a0028;
+        public static final int menu_remove_notes=0x7f0a0024;
         public static final int menu_settings=0x7f0a0023;
         public static final int note=0x7f0a0012;
         public static final int pager=0x7f0a0000;
@@ -139,6 +138,7 @@ public final class R {
         public static final int contextual_actionbar=0x7f090002;
         public static final int dialog_popup_actions=0x7f090003;
         public static final int fragment_note_detail=0x7f090004;
+        public static final int menu_context=0x7f090005;
     }
     public static final class string {
         public static final int action_settings=0x7f07000c;

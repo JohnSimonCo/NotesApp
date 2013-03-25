@@ -74,7 +74,16 @@ public class NoteListFragment extends Fragment {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> adapterView, View view,
 				int i, long l) {
-			return false;
+			MainActivity activity = (MainActivity) getActivity();
+			if (activity.actionMode != null) {
+				return false;
+			}
+
+			// Start the CAB using the ActionMode.Callback defined above
+			activity.actionMode = getActivity().startActionMode(
+					activity.actionModeCallback);
+			view.setSelected(true);
+			return true;
 		}
 	};
 
