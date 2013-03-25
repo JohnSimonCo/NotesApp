@@ -150,7 +150,7 @@ public class MainActivity extends FragmentActivity {
 			return true;
 
 		case R.id.menu_move_list:
-			Resource.moveList(0, 3);
+			Resource.moveList(0, 1);
 			sectionsPagerAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.menu_add_content:

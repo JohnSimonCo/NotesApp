@@ -168,8 +168,11 @@ public class Resource {
 
 	public static void moveList(int oldListIndex, int newListIndex) {
 		ArrayList<NoteList> oldList = (ArrayList<NoteList>) lists.clone();
-		lists.set(newListIndex, oldList.get(oldListIndex));
-		toast(oldList.get(oldListIndex).toString());
+		ArrayList<NoteList> newList = (ArrayList<NoteList>) lists.clone();
+		
+		newList.set(newListIndex, oldList.get(oldListIndex));
+		Resource.toast(newListIndex + " " + oldList.get(oldListIndex).toString());
+//		Resource.toast(oldList.get(newListIndex).toString());
 		int c = -1;
 		int i = -1;
 		while (++c < oldList.size()) {
