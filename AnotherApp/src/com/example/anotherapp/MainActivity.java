@@ -1,5 +1,7 @@
 package com.example.anotherapp;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +29,7 @@ public class MainActivity extends FragmentActivity {
 	public MenuItem deleteList;
 	public MenuItem renameList;
 	public MenuItem addList;
-	
+
 	public static Activity context;
 
 	@Override
@@ -145,7 +147,19 @@ public class MainActivity extends FragmentActivity {
 				Resource.deleteList(viewPager.getCurrentItem());
 				sectionsPagerAdapter.notifyDataSetChanged();
 			}
+			return true;
 
+		case R.id.menu_move_list:
+			Resource.moveList(0, 3);
+			sectionsPagerAdapter.notifyDataSetChanged();
+			return true;
+		case R.id.menu_add_content:
+			int index = Resource.addList("New List");
+			Note note = new Note("Title", "Note", "Image", new Date());
+			for (int i = 0; i < 7; i++)
+				Resource.addNote(index, note);
+			Resource.applyNoteChanges();
+			viewPager.setCurrentItem(index, true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -10,7 +10,7 @@ public abstract class DialogFragment extends Fragment {
 	protected boolean newNote;
 	protected int listIndex;
 	protected int noteIndex;
-	private View imageView;
+	protected View imageView;
 
 	protected DialogActivity activity;
 
@@ -28,7 +28,9 @@ public abstract class DialogFragment extends Fragment {
 						null, null, null, null));
 		return rootView;
 	}
+
 	protected abstract void init(View rootView, Bundle savedInstanceState,
 			Note note);
+
 	protected abstract int getContentView();
 }

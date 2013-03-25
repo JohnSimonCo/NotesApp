@@ -168,6 +168,23 @@ public class Resource {
 
 	public static void moveList(int oldListIndex, int newListIndex) {
 		ArrayList<NoteList> oldList = (ArrayList<NoteList>) lists.clone();
+		lists.set(newListIndex, oldList.get(oldListIndex));
+		toast(oldList.get(oldListIndex).toString());
+		int c = -1;
+		int i = -1;
+		while (++c < oldList.size()) {
+			i++;
+			NoteList list = oldList.get(c);
+			if (list != lists.get(newListIndex))
+				lists.set(i, list);
+		}
+		
+		i = -1;
+		while (++i < lists.size()) {
+			saveManager.save(SAVE_LIST_ID + i, lists.get(i).id);
+		}
+		saveManager.commit();
+		
 	}
 
 	public static void deleteList(int index) {

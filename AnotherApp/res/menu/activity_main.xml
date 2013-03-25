@@ -32,5 +32,13 @@
         android:icon="@drawable/ic_list"
         android:showAsAction="collapseActionView"
         android:title="Rename list"/>
+    <item
+        android:id="@+id/menu_move_list"
+        android:icon="@drawable/ic_list"
+        android:title="Move list"/>
+    <item
+        android:id="@+id/menu_add_content"
+        android:icon="@drawable/ic_list"
+        android:title="Add content"/>
 
 </menu>
