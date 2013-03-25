@@ -167,27 +167,29 @@ public class Resource {
 	}
 
 	public static void moveList(int oldListIndex, int newListIndex) {
-		ArrayList<NoteList> oldList = (ArrayList<NoteList>) lists.clone();
-		ArrayList<NoteList> newList = (ArrayList<NoteList>) lists.clone();
-		
-		newList.set(newListIndex, oldList.get(oldListIndex));
-		Resource.toast(newListIndex + " " + oldList.get(oldListIndex).toString());
-//		Resource.toast(oldList.get(newListIndex).toString());
+		ArrayList<NoteList> oldLists = (ArrayList<NoteList>) lists.clone();
+		ArrayList<NoteList> newLists = (ArrayList<NoteList>) lists.clone();
+
+		newLists.set(newListIndex, oldLists.get(oldListIndex));
+		// Resource.toast(oldList.get(newListIndex).toString());
 		int c = -1;
 		int i = -1;
-		while (++c < oldList.size()) {
+		NoteList list = newLists.get(newListIndex);
+		while (++c < newLists.size()) {
 			i++;
-			NoteList list = oldList.get(c);
-			if (list != lists.get(newListIndex))
-				lists.set(i, list);
+			NoteList old = oldLists.get(c);
+			if (old != list)
+				newLists.set(i, old);
 		}
-		
+
 		i = -1;
 		while (++i < lists.size()) {
 			saveManager.save(SAVE_LIST_ID + i, lists.get(i).id);
 		}
+		String old = saveManager.toString();
 		saveManager.commit();
-		
+		System.out.println(old.equals(saveManager.toString()));
+
 	}
 
 	public static void deleteList(int index) {
