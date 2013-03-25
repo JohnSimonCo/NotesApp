@@ -1,6 +1,7 @@
 package com.example.anotherapp;
 
 import java.util.Date;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -150,15 +151,20 @@ public class MainActivity extends FragmentActivity {
 			return true;
 
 		case R.id.menu_move_list:
-			Resource.moveList(0, 1);
+			Resource.moveList(viewPager.getCurrentItem(), 0);
 			sectionsPagerAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.menu_add_content:
-			int index = Resource.addList("New List");
-			Note note = new Note("Title", "Note", "Image", new Date());
+			int index = Resource
+					.addList(Integer.toString((int) (Math.random() * 100)));
 			for (int i = 0; i < 7; i++)
-				Resource.addNote(index, note);
+				Resource.addNote(
+						index,
+						new Note("",
+								Integer.toString((int) (Math.random() * 100)),
+								"", new Date()));
 			Resource.applyNoteChanges();
+			sectionsPagerAdapter.notifyDataSetChanged();
 			viewPager.setCurrentItem(index, true);
 			return true;
 		default:

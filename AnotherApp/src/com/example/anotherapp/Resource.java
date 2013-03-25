@@ -1,6 +1,7 @@
 package com.example.anotherapp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -167,29 +168,16 @@ public class Resource {
 	}
 
 	public static void moveList(int oldListIndex, int newListIndex) {
-		ArrayList<NoteList> oldLists = (ArrayList<NoteList>) lists.clone();
-		ArrayList<NoteList> newLists = (ArrayList<NoteList>) lists.clone();
-
-		newLists.set(newListIndex, oldLists.get(oldListIndex));
-		// Resource.toast(oldList.get(newListIndex).toString());
-		int c = -1;
+		int direction = oldListIndex < newListIndex ? 1 : -1;
 		int i = -1;
-		NoteList list = newLists.get(newListIndex);
-		while (++c < newLists.size()) {
-			i++;
-			NoteList old = oldLists.get(c);
-			if (old != list)
-				newLists.set(i, old);
+		while (++i < Math.abs(oldListIndex - newListIndex)) {
+			Collections.swap(lists, i * direction + oldListIndex, i * direction
+					+ direction + oldListIndex);
 		}
-
 		i = -1;
-		while (++i < lists.size()) {
+		while (++i < lists.size())
 			saveManager.save(SAVE_LIST_ID + i, lists.get(i).id);
-		}
-		String old = saveManager.toString();
 		saveManager.commit();
-		System.out.println(old.equals(saveManager.toString()));
-
 	}
 
 	public static void deleteList(int index) {
